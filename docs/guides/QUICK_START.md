@@ -1,24 +1,24 @@
-# Quick Start Guide for Claude Users
+# Guía de Inicio Rápido para Usuarios de Claude
 
-This guide provides simple instructions for getting the Airtable MCP working with Claude.
+Esta guía proporciona instrucciones simples para poner en funcionamiento Airtable MCP con Claude.
 
-## Step 1: Clone the repository
+## Paso 1: Clonar el repositorio
 
 ```bash
 git clone https://github.com/rashidazarang/airtable-mcp.git
 cd airtable-mcp
 ```
 
-## Step 2: Install dependencies
+## Paso 2: Instalar dependencias
 
 ```bash
 npm install
 pip install mcp
 ```
 
-## Step 3: Configure Claude
+## Paso 3: Configurar Claude
 
-In Claude settings, add a new MCP server with this configuration (adjust paths as needed):
+En la configuración de Claude, agregue un nuevo servidor MCP con esta configuración (ajuste las rutas según sea necesario):
 
 ```json
 {
@@ -26,35 +26,35 @@ In Claude settings, add a new MCP server with this configuration (adjust paths a
     "airtable": {
       "command": "python3",
       "args": [
-        "/path/to/airtable-mcp/inspector_server.py",
+        "/ruta/a/airtable-mcp/inspector_server.py",
         "--token",
-        "YOUR_AIRTABLE_TOKEN",
+        "SU_TOKEN_AIRTABLE",
         "--base",
-        "YOUR_BASE_ID"
+        "SU_ID_BASE"
       ]
     }
   }
 }
 ```
 
-Replace:
-- `/path/to/airtable-mcp/` with the actual path where you cloned the repository
-- `YOUR_AIRTABLE_TOKEN` with your Airtable Personal Access Token
-- `YOUR_BASE_ID` with your Airtable Base ID
+Reemplace:
+- `/ruta/a/airtable-mcp/` con la ruta real donde clonó el repositorio
+- `SU_TOKEN_AIRTABLE` con su Token de Acceso Personal de Airtable
+- `SU_ID_BASE` con su ID de Base de Airtable
 
-## Step 4: Restart Claude
+## Paso 4: Reiniciar Claude
 
-After configuring, restart Claude and try these commands:
+Después de configurar, reinicie Claude e intente estos comandos:
 
-1. "List the tables in my Airtable base"
-2. "Show me records from [table name]"
+1. "Listar las tablas en mi base Airtable"
+2. "Mostrarme registros de [nombre de tabla]"
 
-## Troubleshooting
+## Solución de Problemas
 
-If you encounter issues:
+Si encuentra problemas:
 
-1. Check the Claude logs (click on the error message)
-2. Verify your Airtable token and base ID are correct
-3. Make sure you've specified the correct path to `inspector_server.py`
+1. Verifique los registros de Claude (haga clic en el mensaje de error)
+2. Verifique que su token de Airtable e ID de base sean correctos
+3. Asegúrese de haber especificado la ruta correcta a `inspector_server.py`
 
-This version includes enhanced error handling to properly format JSON responses and avoid "Method not found" errors in Claude. 
+Esta versión incluye manejo mejorado de errores para formatear correctamente las respuestas JSON

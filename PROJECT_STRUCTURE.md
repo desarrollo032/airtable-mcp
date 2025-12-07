@@ -1,110 +1,110 @@
-# Project Structure
+# Estructura del Proyecto
 
-## 📁 Directory Layout
+## 📁 Diseño de Directorios
 
 ```
 airtable-mcp/
-├── src/                    # Source code
-│   ├── index.js           # Main entry point
-│   ├── typescript/        # TypeScript implementation
-│   ├── javascript/        # JavaScript implementation
-│   └── python/            # Python implementation
-├── dist/                  # Compiled TypeScript output
-├── docs/                  # Documentation
-│   ├── api/              # API documentation
-│   ├── guides/           # User guides
-│   └── releases/         # Release notes
-├── tests/                 # Test files
-│   ├── unit/            # Unit tests
-│   ├── integration/     # Integration tests
-│   └── e2e/             # End-to-end tests
-├── examples/             # Usage examples
-├── bin/                  # CLI executables
-├── scripts/              # Build and utility scripts
-├── config/               # Configuration files
-├── docker/               # Docker configurations
-└── types/                # TypeScript type definitions
+├── src/                    # Código fuente
+│   ├── index.js           # Punto de entrada principal
+│   ├── typescript/        # Implementación de TypeScript
+│   ├── javascript/        # Implementación de JavaScript
+│   └── python/            # Implementación de Python
+├── dist/                  # Salida compilada de TypeScript
+├── docs/                  # Documentación
+│   ├── api/              # Documentación de API
+│   ├── guides/           # Guías de usuario
+│   └── releases/         # Notas de lanzamiento
+├── tests/                 # Archivos de prueba
+│   ├── unit/            # Pruebas unitarias
+│   ├── integration/     # Pruebas de integración
+│   └── e2e/             # Pruebas de extremo a extremo
+├── examples/             # Ejemplos de uso
+├── bin/                  # Ejecutables de CLI
+├── scripts/              # Secuencias de construcción y utilidades
+├── config/               # Archivos de configuración
+├── docker/               # Configuraciones de Docker
+└── types/                # Definiciones de tipo de TypeScript
 ```
 
-## 🚀 Quick Start
+## 🚀 Inicio Rápido
 
 ```bash
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Build TypeScript
+# Construir TypeScript
 npm run build
 
-# Run the server
+# Ejecutar el servidor
 npm start
 
-# Development mode
+# Modo de desarrollo
 npm run dev
 
-# Run tests
+# Ejecutar pruebas
 npm test
 ```
 
-## 📦 Available Scripts
+## 📦 Scripts Disponibles
 
-- `npm run build` - Compile TypeScript to JavaScript
-- `npm start` - Start the production server
-- `npm run dev` - Start development server with hot reload
-- `npm test` - Run all tests
-- `npm run lint` - Check code quality
-- `npm run format` - Format code with Prettier
+- `npm run build` - Compilar TypeScript a JavaScript
+- `npm start` - Iniciar el servidor de producción
+- `npm run dev` - Iniciar servidor de desarrollo con recarga en caliente
+- `npm test` - Ejecutar todas las pruebas
+- `npm run lint` - Verificar la calidad del código
+- `npm run format` - Dar formato al código con Prettier
 
-## 🔧 Implementations
+## 🔧 Implementaciones
 
-### TypeScript (Primary)
-- Location: `src/typescript/`
-- Output: `dist/`
-- Entry: `airtable-mcp-server.ts`
+### TypeScript (Primaria)
+- Ubicación: `src/typescript/`
+- Salida: `dist/`
+- Entrada: `airtable-mcp-server.ts`
 
 ### JavaScript
-- Location: `src/javascript/`
-- Entry: `airtable_simple_production.js`
+- Ubicación: `src/javascript/`
+- Entrada: `airtable_simple_production.js`
 
 ### Python
-- Location: `src/python/`
-- Entry: `inspector_server.py`
+- Ubicación: `src/python/`
+- Entrada: `inspector_server.py`
 
-## 📝 Configuration Files
+## 📝 Archivos de Configuración
 
-- `package.json` - Node.js dependencies and scripts
-- `tsconfig.json` - TypeScript compiler configuration
-- `.eslintrc.js` - ESLint rules
-- `.prettierrc` - Prettier formatting rules
-- `jest.config.js` - Jest testing configuration
-- `.nvmrc` - Node.js version specification
+- `package.json` - Dependencias y scripts de Node.js
+- `tsconfig.json` - Configuración del compilador de TypeScript
+- `.eslintrc.js` - Reglas de ESLint
+- `.prettierrc` - Reglas de formato de Prettier
+- `jest.config.js` - Configuración de pruebas de Jest
+- `.nvmrc` - Especificación de versión de Node.js
 
-## 🧪 Testing
+## 🧪 Pruebas
 
-Tests are organized by type:
-- Unit tests: `tests/unit/`
-- Integration tests: `tests/integration/`
-- End-to-end tests: `tests/e2e/`
+Las pruebas están organizadas por tipo:
+- Pruebas unitarias: `tests/unit/`
+- Pruebas de integración: `tests/integration/`
+- Pruebas de extremo a extremo: `tests/e2e/`
 
-Run specific test suites:
+Ejecutar suites de pruebas específicas:
 ```bash
 npm run test:unit
 npm run test:integration
 npm run test:e2e
 ```
 
-## 📚 Documentation
+## 📚 Documentación
 
-- API Documentation: `docs/api/`
-- User Guides: `docs/guides/`
-- Release Notes: `docs/releases/`
-- Changelog: `CHANGELOG.md`
+- Documentación de API: `docs/api/`
+- Guías de usuario: `docs/guides/`
+- Notas de lanzamiento: `docs/releases/`
+- Registro de cambios: `CHANGELOG.md`
 
-## 🐳 Docker Support
+## 🐳 Soporte de Docker
 
-Docker configurations are in the `docker/` directory:
-- `Dockerfile` - Python implementation
-- `Dockerfile.node` - Node.js implementation
+Las configuraciones de Docker están en el directorio `docker/`:
+- `Dockerfile` - Implementación de Python
+- `Dockerfile.node` - Implementación de Node.js
 
-## 🤝 Contributing
+## 🤝 Contribuyendo
 
-See `CONTRIBUTING.md` for guidelines on contributing to this project.
+Para obtener información sobre cómo contribuir, consulte `CONTRIBUTING.md`

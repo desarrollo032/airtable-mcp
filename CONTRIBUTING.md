@@ -1,81 +1,84 @@
-# Contributing to Airtable MCP
+# Contribuyendo a Airtable MCP
 
-Thank you for your interest in contributing to Airtable MCP! This guide will help you get started with contributing to this project.
+¡Gracias por tu interés en contribuir a Airtable MCP! Esta guía te ayudará a 
+comenzar con las contribuciones a este proyecto.
 
-## Development Setup
+## Configuración del Desarrollo
 
-1. **Clone the repository**:
+1. **Clonar el repositorio**:
    ```bash
    git clone https://github.com/rashidazarang/airtable-mcp.git
    cd airtable-mcp
    ```
 
-2. **Install dependencies**:
+2. **Instalar dependencias**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Environment setup**:
-   Create a `.env` file in the root directory with your Airtable API token:
+3. **Configuración del entorno**:
+   Cree un archivo `.env` en el directorio raíz con su token de API de Airtable:
    ```
-   AIRTABLE_PERSONAL_ACCESS_TOKEN=your_token_here
-   AIRTABLE_BASE_ID=optional_default_base_id
+   AIRTABLE_PERSONAL_ACCESS_TOKEN=su_token_aqui
+   AIRTABLE_BASE_ID=id_base_predeterminada_opcional
    ```
 
-## Running the Server
+## Ejecutar el Servidor
 
-You can run the server directly with Python:
+Puede ejecutar el servidor directamente con Python:
 
 ```bash
-python3.10 inspector_server.py --token "your_token" --base "your_base_id"
+python3.10 inspector_server.py --token "su_token" --base "su_id_de_base"
 ```
 
-Or through the Node.js wrapper:
+O a través del wrapper de Node.js:
 
 ```bash
-node index.js --token "your_token" --base "your_base_id"
+node index.js --token "su_token" --base "su_id_de_base"
 ```
 
-## Testing
+## Pruebas
 
-Run the test client to verify your Airtable API access:
+Ejecute el cliente de prueba para verificar su acceso a la API de Airtable:
 
 ```bash
 python3.10 test_client.py
 ```
 
-## Pull Request Process
+## Proceso de Solicitud de Extracción
 
-1. **Fork the Repository** on GitHub.
+1. **Bifurque el Repositorio** en GitHub.
 
-2. **Create a Branch** for your feature or bugfix.
+2. **Cree una Rama** para su característica o corrección de errores.
 
-3. **Make Changes** according to the project style guidelines.
+3. **Realice Cambios** de acuerdo con las directrices de estilo del proyecto.
 
-4. **Test Thoroughly** to ensure your changes work as expected.
+4. **Pruebe Completamente** para asegurarse de que sus cambios funcionen como se 
+espera.
 
-5. **Document Changes** in the README.md if necessary.
+5. **Documente Cambios** en el README.md si es necesario.
 
-6. **Submit a Pull Request** to the main repository.
+6. **Envíe una Solicitud de Extracción** al repositorio principal.
 
-## Coding Guidelines
+## Directrices de Codificación
 
-- Follow Python PEP 8 style guidelines
-- Write docstrings for all functions, classes, and modules
-- Include type hints for function parameters and return values
-- Write clear commit messages
+- Siga las directrices de estilo PEP 8 de Python
+- Escriba cadenas de documentación para todas las funciones, clases y módulos
+- Incluya sugerencias de tipo para parámetros de función y valores de retorno
+- Escriba mensajes de confirmación claros
 
-## Adding New Tools
+## Agregar Nuevas Herramientas
 
-When adding new Airtable API tools:
+Cuando agregue nuevas herramientas de API de Airtable:
 
-1. Add the tool function to `inspector_server.py` using the `@app.tool()` decorator
-2. Define clear parameter and return types
-3. Provide a descriptive docstring for the tool
-4. Update the inspector.py file to include the new tool in the JSON schema
-5. Add error handling for API requests
-6. Update the README.md to document the new tool
+1. Agregue la función de herramienta a `inspector_server.py` utilizando el decorador `@app.tool()`
+2. Defina tipos claros de parámetros y retorno
+3. Proporcione una cadena de documentación descriptiva para la herramienta
+4. Actualice el archivo `inspector.py` para incluir la nueva herramienta en el esquema JSON
+5. Agregue manejo de errores para solicitudes de API
+6. Actualice el README.md para documentar la nueva herramienta
 
-## License
+## Licencia
 
-By contributing to this project, you agree that your contributions will be licensed under the project's MIT License. 
+Al contribuir a este proyecto, acepta que sus contribuciones se licenciarán bajo 
+la misma licencia que el proyecto (MIT License).
