@@ -341,4 +341,5 @@ async def set_base_id(base_id_param: str) -> str:
 
 # Start the server
 if __name__ == "__main__":
-    app.start() 
+    # FastMCP uses `run()` to start the server (not `start()`) — use run() to avoid AttributeError
+    app.run()

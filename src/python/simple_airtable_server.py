@@ -148,4 +148,5 @@ async def list_records(table_name: str, max_records: int = 100) -> str:
 # Start the server
 if __name__ == "__main__":
     print(f"Starting Airtable MCP Server with token {token[:5]}...{token[-5:]} and base {base_id}")
-    app.start() 
+    # FastMCP uses `run()` to start the server (not `start()`) — use run() to avoid AttributeError
+    app.run()
