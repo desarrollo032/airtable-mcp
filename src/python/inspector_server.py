@@ -26,6 +26,8 @@ def parse_args():
     parser.add_argument("--token", dest="api_token", help="Airtable Personal Access Token")
     parser.add_argument("--base", dest="base_id", help="Airtable Base ID")
     parser.add_argument("--config", dest="config_json", help="Configuration as JSON (for Smithery integration)")
+    parser.add_argument("--host", dest="host", default="127.0.0.1", help="Host to bind the server to")
+    parser.add_argument("--port", dest="port", type=int, default=8000, help="Port to bind the server to")
     return parser.parse_args()
 
 # Set up logging
@@ -343,4 +345,4 @@ async def set_base_id(base_id_param: str) -> str:
 # Start the server
 if __name__ == "__main__":
     # FastMCP uses `run()` to start the server (not `start()`) — use run() to avoid AttributeError
-    app.run()
+    app.run(host=args.host, port=args.port)

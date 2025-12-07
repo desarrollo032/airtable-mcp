@@ -1,5 +1,5 @@
 {
-  "source": "src/python/inspector_server.py",
+  "source": "python src/python/inspector_server.py --token $AIRTABLE_PERSONAL_ACCESS_TOKEN --base $AIRTABLE_BASE_ID --host 0.0.0.0 --port $PORT",
   "host": "0.0.0.0",
   "port": 8000
 }
