@@ -1,1 +1,1 @@
-web: python src/python/inspector_server.py
+web: python3 app.py
