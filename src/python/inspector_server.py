@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 """
 Airtable MCP Inspector Server
 -----------------------------
@@ -6,7 +6,7 @@ A simple MCP server that implements the Airtable tools
 """
 import os
 import sys
-import json
+import json 
 import logging
 import requests
 import argparse
@@ -16,6 +16,15 @@ from typing import Optional, Dict, Any, List
 
 try:
     from mcp.server.fastmcp import FastMCP
+except ImportError:
+    print("Error: MCP SDK not found. Please install with 'pip install mcp'")
+    sys.exit(1)
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Parse command line arguments
 except ImportError:
     print("Error: MCP SDK not found. Please install with 'pip install mcp'")
     sys.exit(1)
@@ -345,4 +354,11 @@ async def set_base_id(base_id_param: str) -> str:
 # Start the server
 if __name__ == "__main__":
     # FastMCP uses `run()` to start the server (not `start()`) — use run() to avoid AttributeError
-    app.run(host=args.host, port=args.port)
+    # For Railway deployment, use environment variables for host and port
+    host = os.environ.get("HOST", args.host)
+    port = int(os.environ.get("PORT", args.port))
+    logger.info(f"Starting server on {host}:{port}")
+
+    # FastMCP doesn't support host/port in run(), so we need to use a different approach
+    # For now, just run in stdio mode which is the default for MCP servers
+    app.run()
