@@ -1,96 +1,96 @@
-# Installation
+# Instalación
 
-Airtable MCP embeds Airtable database connectivity directly into your AI-powered code editor
+Airtable MCP integra la conectividad de la base de datos de Airtable directamente en su editor de código impulsado por IA
 
-## Getting Started
+## Comenzando
 
-Built by Rashid Azarang,
+Construido por Rashid Azarang,
 
-Airtable MCP gives AI code editors and agents the ability to access and manipulate your Airtable databases for powerful data management capabilities - all in a secure manner with your own API tokens.
+Airtable MCP proporciona a los editores de código de IA y agentes la capacidad de acceder y manipular sus bases de datos de Airtable para poderosas capacidades de gestión de datos - todo de manera segura con sus propios tokens de API.
 
-With this MCP server tool, you can enable AI code editors and agents to have access to:
+Con esta herramienta de servidor MCP, puede habilitar que los editores de código de IA y agentes tengan acceso a:
 
-* List and access all your Airtable bases
-* Browse tables, fields, and record data
-* Create, read, update, and delete records
-* Export and manipulate schemas
-* Perform complex queries against your data
-* Create data migration mappings
-* Analyze and transform your Airtable data
+* Listar y acceder a todas sus bases de Airtable
+* Examinar datos de tablas, campos y registros
+* Crear, leer, actualizar y eliminar registros
+* Exportar y manipular esquemas
+* Realizar consultas complejas contra sus datos
+* Crear asignaciones de migración de datos
+* Analizar y transformar sus datos de Airtable
 
-That way, you can simply tell Cursor or any AI code editor with MCP integrations:
+De esa manera, puede simplemente decirle a Cursor o a cualquier editor de código de IA con integraciones MCP:
 
-"Show me all the tables in my Airtable base"
+"Mostrarme todas las tablas en mi base Airtable"
 
-"Find all records from the Customers table where the status is Active and the last purchase was after January 1st"
+"Encontrar todos los registros de la tabla Clientes donde el estado es Activo y la última compra fue después del 1 de enero"
 
-"Create a new record in the Products table with these fields..."
+"Crear un nuevo registro en la tabla Productos con estos campos..."
 
-"Export the schema of my current Airtable base"
+"Exportar el esquema de mi base Airtable actual"
 
-"Help me create a mapping between these two tables for data migration"
-
----
-
-## Requirements
-
-* Node.js 14+ installed on your machine
-* Python 3.10+ installed on your machine (automatically detected)
-* Airtable Personal Access Token (API Key)
-* MCP Client Application (Cursor, Claude Desktop, Cline, Zed, etc.)
-
-**Note**: Model Context Protocol (MCP) is specific to Anthropic models. When using an editor like Cursor, make sure to enable composer agent with Claude 3.5 Sonnet selected as the model.
+"Ayudarme a crear una asignación entre estas dos tablas para la migración de datos"
 
 ---
 
-## Installation
+## Requisitos
 
-### 1. Install via Smithery (Easiest)
+* Node.js 14+ instalado en su máquina
+* Python 3.10+ instalado en su máquina (se detecta automáticamente)
+* Token de Acceso Personal de Airtable (Clave de API)
+* Aplicación Cliente MCP (Cursor, Claude Desktop, Cline, Zed, etc.)
 
-The easiest way to install Airtable MCP is through Smithery:
+**Nota**: El Protocolo de Contexto de Modelo (MCP) es específico de los modelos de Anthropic. Al usar un editor como Cursor, asegúrese de habilitar el agente compositor con Claude 3.5 Sonnet seleccionado como modelo.
 
-1. Visit [Smithery](https://smithery.ai)
-2. Search for "@rashidazarang/airtable-mcp"
-3. Click "Install" and follow the prompts to configure with your Airtable token and base ID
+---
 
-### 2. Install via NPX (Alternative)
+## Instalación
 
-Another simple way to install and use Airtable MCP is via NPX:
+### 1. Instalar a través de Smithery (Lo más fácil)
+
+La forma más fácil de instalar Airtable MCP es a través de Smithery:
+
+1. Visite [Smithery](https://smithery.ai)
+2. Busque "@rashidazarang/airtable-mcp"
+3. Haga clic en "Instalar" y siga las indicaciones para configurar con su token de Airtable e ID de base
+
+### 2. Instalar a través de NPX (Alternativa)
+
+Otra forma simple de instalar y usar Airtable MCP es a través de NPX:
 
 ```bash
-# Install globally
+# Instalar globalmente
 npm install -g airtable-mcp
 
-# Or use directly with npx (no installation needed)
-npx airtable-mcp --token YOUR_AIRTABLE_TOKEN --base YOUR_BASE_ID
+# O usar directamente con npx (no se requiere instalación)
+npx airtable-mcp --token SU_TOKEN_AIRTABLE --base SU_ID_BASE
 ```
 
-### 3. Get Your Airtable API Token
+### 3. Obtener su Token de API de Airtable
 
-1. Log in to your Airtable account
-2. Go to your [Account Settings](https://airtable.com/account)
-3. Navigate to the "API" section
-4. Create a Personal Access Token with appropriate permissions
-5. Copy your token to use in the configuration
+1. Inicie sesión en su cuenta de Airtable
+2. Vaya a su [Configuración de Cuenta](https://airtable.com/account)
+3. Navegue a la sección "API"
+4. Cree un Token de Acceso Personal con permisos apropiados
+5. Copie su token para usarlo en la configuración
 
-### 4. Configure Your MCP Client
+### 4. Configure su Cliente MCP
 
-#### For Cursor:
+#### Para Cursor:
 
-1. Go to Cursor Settings
-2. Navigate to Features, scroll down to MCP Servers and click "Add new MCP server"
-3. Give it a unique name (airtable-tools), set type to "command" and set the command to:
+1. Vaya a Configuración de Cursor
+2. Navegue a Características, desplácese hacia abajo hasta Servidores MCP y haga clic en "Agregar nuevo servidor MCP"
+3. Dale un nombre único (airtable-tools), establece el tipo en "command" y establece el comando en:
 
-**For macOS/Linux/Windows:**
+**Para macOS/Linux/Windows:**
 ```bash
-npx airtable-mcp --token YOUR_AIRTABLE_TOKEN --base YOUR_BASE_ID
+npx airtable-mcp --token SU_TOKEN_AIRTABLE --base SU_ID_BASE
 ```
 
-Replace `YOUR_AIRTABLE_TOKEN` with your Airtable Personal Access Token and `YOUR_BASE_ID` with your default Airtable base ID (optional).
+Reemplace `SU_TOKEN_AIRTABLE` con su Token de Acceso Personal de Airtable y `SU_ID_BASE` con su ID de base de Airtable predeterminada (opcional).
 
-#### For Advanced Users via ~/.cursor/mcp.json:
+#### Para Usuarios Avanzados a través de ~/.cursor/mcp.json:
 
-Edit your `~/.cursor/mcp.json` file to include:
+Edite su archivo `~/.cursor/mcp.json` para incluir:
 
 ```json
 {
@@ -99,30 +99,30 @@ Edit your `~/.cursor/mcp.json` file to include:
       "command": "npx",
       "args": [
         "airtable-mcp",
-        "--token", "YOUR_AIRTABLE_TOKEN",
-        "--base", "YOUR_BASE_ID"
+        "--token", "SU_TOKEN_AIRTABLE",
+        "--base", "SU_ID_BASE"
       ]
     }
   }
 }
 ```
 
-### 5. Verify Connection
+### 5. Verificar Conexión
 
-1. Restart your MCP client (Cursor, etc.)
-2. Create a new query using the Composer Agent with Claude 3.5 Sonnet model
-3. Ask something like "List my Airtable bases" or "Show me the tables in my current base"
-4. You should see a response with your Airtable data
+1. Reinicie su cliente MCP (Cursor, etc.)
+2. Cree una nueva consulta usando el Agente Compositor con el modelo Claude 3.5 Sonnet
+3. Pregunte algo como "Listar mis bases Airtable" o "Mostrarme las tablas en mi base actual"
+4. Debería ver una respuesta con sus datos de Airtable
 
-### 6. For Production Use (Optional)
+### 6. Para Uso en Producción (Opcional)
 
-For continuous availability, you can set up Airtable MCP using PM2:
+Para disponibilidad continua, puede configurar Airtable MCP usando PM2:
 
 ```bash
-# Install PM2 if you don't have it
+# Instale PM2 si no lo tiene
 npm install -g pm2
 
-# Create a PM2 config file
+# Cree un archivo de configuración de PM2
 echo 'module.exports = {
   apps: [
     {
@@ -130,8 +130,8 @@ echo 'module.exports = {
       script: "npx",
       args: [
         "airtable-mcp",
-        "--token", "YOUR_AIRTABLE_TOKEN",
-        "--base", "YOUR_BASE_ID"
+        "--token", "SU_TOKEN_AIRTABLE",
+        "--base", "SU_ID_BASE"
       ],
       env: {
         PATH: process.env.PATH,
@@ -140,44 +140,43 @@ echo 'module.exports = {
   ],
 };' > ecosystem.config.js
 
-# Start the process
+# Inicie el proceso
 pm2 start ecosystem.config.js
 
-# Set it to start on boot
+# Configúrelo para que se inicie al arranque
 pm2 startup
 pm2 save
 ```
 
 ---
 
-## Troubleshooting
+## Solución de Problemas
 
-Here are some common issues and their solutions:
+Aquí hay algunos problemas comunes y sus soluciones:
 
-### Error: Unable to connect to Airtable API
+### Error: No se puede conectar a la API de Airtable
 
-- Double-check your Airtable API token is correct and has sufficient permissions
-- Verify your internet connection
-- Check if Airtable API is experiencing downtime
+- Verifique que su token de API de Airtable sea correcto y tenga permisos suficientes
+- Verifique su conexión a Internet
+- Compruebe si la API de Airtable está experimentando tiempo de inactividad
 
-### Issue: MCP server not connecting
+### Problema: El servidor MCP no se conecta
 
-- Make sure Node.js 14+ and Python 3.10+ are installed and in your PATH
-- Try specifying a specific version: `npx airtable-mcp@latest`
-- Check the Cursor logs for any connection errors
+- Asegúrese de que Node.js 14+ y Python 3.10+ estén instalados y en su PATH
+- Intente especificar una versión específica: `npx airtable-mcp@latest`
+- Compruebe los registros de Cursor para detectar errores de conexión
 
-### Error: Base not found
+### Error: Base no encontrada
 
-- Verify your base ID is correct
-- Make sure your API token has access to the specified base
-- Try listing all bases first to confirm access
+- Verifique que su ID de base sea correcto
+- Asegúrese de que su token de API tenga acceso a la base especificada
+- Intente listar todas las bases primero para confirmar el acceso
 
-### Issue: Permission denied errors
+### Problema: Errores de permiso denegado
 
-- Make sure your token has the necessary permissions for the operations you're trying to perform
-- Check if you're attempting operations on tables/bases that your token doesn't have access to
+- Asegúrese de que su token tenga los permisos necesarios para las operaciones que está intentando realizar
+- Compruebe si está intentando operaciones en tablas/bases a las que su token no tiene acceso
 
-### For more help
+### Para más ayuda
 
-- Open an issue on the [GitHub repository](https://github.com/rashidazarang/airtable-mcp/issues)
-- Check the Airtable API documentation for any API-specific errors 
+- Abra un problema en el [repositorio de GitHub](https://github.com/rashidazarang/airtable-mcp/issues)

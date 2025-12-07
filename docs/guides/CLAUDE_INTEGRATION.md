@@ -1,23 +1,23 @@
-# Claude Desktop Integration Guide
+# Guía de Integración con Claude Desktop
 
-This guide provides detailed instructions for setting up the Airtable MCP with Claude Desktop.
+Esta guía proporciona instrucciones detalladas para configurar Airtable MCP con Claude Desktop.
 
-## Prerequisites
+## Requisitos Previos
 
-- Node.js 14+ installed
-- Claude Desktop installed
-- Airtable API token
-- Airtable base ID
+- Node.js 14+ instalado
+- Claude Desktop instalado
+- Token de API de Airtable
+- ID de base de Airtable
 
-## Configuration Steps
+## Pasos de Configuración
 
-1. **Locate Configuration File**
-   - Open Finder
-   - Press `Cmd + Shift + G`
-   - Enter `~/Library/Application Support/Claude`
-   - Create or open `claude_desktop_config.json`
+1. **Localizar Archivo de Configuración**
+   - Abra Finder
+   - Presione `Cmd + Shift + G`
+   - Ingrese `~/Library/Application Support/Claude`
+   - Cree o abra `claude_desktop_config.json`
 
-2. **Add Configuration**
+2. **Agregar Configuración**
    ```json
    {
      "mcpServers": {
@@ -28,69 +28,68 @@ This guide provides detailed instructions for setting up the Airtable MCP with C
            "run",
            "@rashidazarang/airtable-mcp",
            "--token",
-           "YOUR_AIRTABLE_TOKEN",
+           "SU_TOKEN_AIRTABLE",
            "--base",
-           "YOUR_BASE_ID"
+           "SU_ID_BASE"
          ]
        }
      }
    }
    ```
 
-3. **Replace Credentials**
-   - Replace `YOUR_AIRTABLE_TOKEN` with your token from [Airtable Account](https://airtable.com/account)
-   - Replace `YOUR_BASE_ID` with your base ID (found in your Airtable base URL)
+3. **Reemplazar Credenciales**
+   - Reemplace `SU_TOKEN_AIRTABLE` con su token de [Cuenta de Airtable](https://airtable.com/account)
+   - Reemplace `SU_ID_BASE` con su ID de base (encontrado en la URL de su base de Airtable)
 
-4. **Restart Claude Desktop**
-   - Close Claude Desktop completely
-   - Wait 5 seconds
-   - Reopen Claude Desktop
-   - Wait 30 seconds for the connection to establish
+4. **Reiniciar Claude Desktop**
+   - Cierre Claude Desktop completamente
+   - Espere 5 segundos
+   - Vuelva a abrir Claude Desktop
+   - Espere 30 segundos para que se establezca la conexión
 
-## Verification
+## Verificación
 
-Test the connection by asking Claude:
-- "Show me all my Airtable bases"
-- "What tables are in this base?"
-- "Show me the first 5 records from any table"
+Pruebe la conexión preguntando a Claude:
+- "Mostrarme todas mis bases Airtable"
+- "¿Qué tablas hay en esta base?"
+- "Mostrarme los primeros 5 registros de cualquier tabla"
 
-## Troubleshooting
+## Solución de Problemas
 
-### Connection Issues
-1. Verify Node.js installation:
+### Problemas de Conexión
+1. Verifique la instalación de Node.js:
    ```bash
-   node -v  # Should show v14 or higher
+   node -v  # Debería mostrar v14 o superior
    ```
 
-2. Test Smithery CLI:
+2. Pruebe CLI de Smithery:
    ```bash
    npx @smithery/cli --version
    ```
 
-3. Check logs:
-   - Open `~/Library/Logs/Claude/mcp-server-airtable-mcp.log`
-   - Look for any error messages
+3. Verifique registros:
+   - Abra `~/Library/Logs/Claude/mcp-server-airtable-mcp.log`
+   - Busque cualquier mensaje de error
 
-### Common Errors
+### Errores Comunes
 
-1. **"Command not found"**
+1. **"Comando no encontrado"**
    ```bash
    npm install -g npm@latest
    ```
 
-2. **JSON Parsing Errors**
-   - Remove any extra backslashes
-   - Use the exact format shown above
-   - Ensure no trailing commas
+2. **Errores de Análisis de JSON**
+   - Elimine todas las barras invertidas adicionales
+   - Use el formato exacto mostrado arriba
+   - Asegúrese de no haber comas finales
 
-3. **Connection Timeout**
-   - Wait full 30 seconds after startup
-   - Check your internet connection
-   - Verify API token is valid
+3. **Tiempo de Conexión Agotado**
+   - Espere los 30 segundos completos después del inicio
+   - Verifique su conexión a Internet
+   - Verifique que su token de API sea válido
 
-## Support
+## Soporte
 
-If you encounter any issues:
-1. Check [GitHub Issues](https://github.com/rashidazarang/airtable-mcp/issues)
-2. Join our [Discord](https://discord.gg/your-discord)
-3. Email: support@example.com 
+Si encuentra algún problema:
+1. Verifique [Problemas de GitHub](https://github.com/rashidazarang/airtable-mcp/issues)
+2. Únase a nuestro [Discord](https://discord.gg/your-discord)

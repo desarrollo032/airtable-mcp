@@ -1,28 +1,40 @@
 # Servidor Airtable MCP
 
-[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/rashidazaran
-g/airtable-mcp)](https://archestra.ai/mcp-catalog/rashidazarang__airtable-mcp) [![smithery badge](https://smithery.ai/badge/@rashidazarang/airtable-mcp)](http
-s://smithery.ai/server/@rashidazarang/airtable-mcp)                            ![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=for-the-badge&lo
-go=Airtable&logoColor=white)                                                   [![MCP](https://img.shields.io/badge/MCP-3.2.5-blue)](https://github.com/rashid
-azarang/airtable-mcp)                                                          [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.t
-ypescriptlang.org/)                                                            [![AI Agent](https://img.shields.io/badge/AI_Agent-Enhanced-purple)](https://gi
-thub.com/rashidazarang/airtable-mcp)                                           [![Security](https://img.shields.io/badge/Security-Enterprise-green)](https://g
-ithub.com/rashidazarang/airtable-mcp)                                          [![Protocol](https://img.shields.io/badge/Protocol-2024--11--05-success)](https
-://modelcontextprotocol.io/)                                                   
-🤖 **Agente IA Revolucionario v3.2.5** - Servidor Airtable MCP avanzado impulsado por IA 
-con **arquitectura TypeScript reparada**, organización de proyecto de clase mundial, capacidades inteligentes integrales, análisis predictivo y características de automatización empresarial.
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/rashidazarang/airtable-mcp)](https://archestra.ai/mcp-catalog/rashidazarang__airtable-mcp) [![smithery badge](https://smithery.ai/badge/@rashidazarang/airtable-mcp)](https://smithery.ai/server/@rashidazarang/airtable-mcp) ![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=for-the-badge&logo=Airtable&logoColor=white) [![MCP](https://img.shields.io/badge/MCP-3.2.5-blue)](https://github.com/rashidazarang/airtable-mcp) [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/) [![AI Agent](https://img.shields.io/badge/AI_Agent-Enhanced-purple)](https://github.com/rashidazarang/airtable-mcp) [![Security](https://img.shields.io/badge/Security-Enterprise-green)](https://github.com/rashidazarang/airtable-mcp) [![Protocol](https://img.shields.io/badge/Protocol-2024--11--05-success)](https://modelcontextprotocol.io/)
 
-## 🚀 Última: v3.2.5 - ID de Base Opcional y Soporte Mejorado para Múltiples Bases
+🤖 **Agente IA Revolucionario v3.2.5** - Servidor Airtable MCP avanzado impulsado por IA con **arquitectura TypeScript reparada**, organización de proyecto de clase mundial, capacidades inteligentes integrales, análisis predictivo y características de automatización empresarial.
+
+---
+
+## 📑 Tabla de Contenidos
+
+- [Últimas Versiones](#últimas-versiones)
+- [Suite de Inteligencia IA](#-suite-de-inteligencia-ia)
+- [Características Principales](#-características)
+- [Requisitos Previos](#-requisitos-previos)
+- [Inicio Rápido](#-inicio-rápido)
+- [Ejemplos de Uso](#-ejemplos-de-uso)
+- [Herramientas Disponibles](#-herramientas-disponibles-33-total)
+- [Configuración Avanzada](#-configuración-avanzada)
+- [Pruebas](#-pruebas)
+- [Solución de Problemas](#-solución-de-problemas)
+- [Documentación](#-documentación)
+
+---
+
+## Últimas Versiones
+
+### 🚀 v3.2.5 - ID de Base Opcional y Soporte Mejorado para Múltiples Bases
 
 **Mejoras Principales** con compatibilidad completa con versiones anteriores:
-- 🔓 **ID de Base Opcional** - Comience sin especificar una base, descúbralas usando la herramienta `list_bases`
+- �� **ID de Base Opcional** - Comience sin especificar una base, descúbralas usando la herramienta `list_bases`
 - 🔍 **Descubrimiento de Base Mejorado** - Nueva herramienta `list_bases` completamente implementada en TypeScript
 - 🎯 **Selección de Base Dinámica** - Especifique IDs de base por llamada de herramienta, sin requisito de inicio
 - ✅ **Problema #9 Resuelto** - Resolvió la limitación "base requerida al inicio"
 - 🔧 **Gobernanza Mejorada** - Manejo inteligente de lista blanca de base para flujos de trabajo multi-base
 - 📦 **Soporte Completo de STDIO** - Compatibilidad confirmada con Claude Desktop/Code
 
-## 📋 Anterior: v3.2.4 - Corrección de Seguridad XSS y Protección Completa
+### 📋 v3.2.4 - Corrección de Seguridad XSS y Protección Completa
 
 **Mejoras Principales** con compatibilidad completa con versiones anteriores:
 - 🔧 **Arquitectura TypeScript Reparada** - Se resolvieron problemas de compilación, separación adecuada de tipos y código en tiempo de ejecución
@@ -34,64 +46,82 @@ con **arquitectura TypeScript reparada**, organización de proyecto de clase mun
 - 🎯 **Experiencia del Desarrollador** - Soporte para IntelliSense, autocompletado y refactorización
 - 🔄 **Distribución Dual** - Use con JavaScript o TypeScript, su elección
 
+---
+
 ## 🤖 Suite de Inteligencia IA
 
 **Inteligencia Completa Impulsada por IA** con capacidades empresariales:
 - 🤖 **10 Plantillas de Mensajes IA** - Análisis avanzado, predicciones y automatización
 - 🔮 **Análisis Predictivo** - Pronóstico y análisis de tendencias con intervalos de confianza
 - 🗣️ **Procesamiento de Lenguaje Natural** - Consulte sus datos usando lenguaje humano
-- 📊 **Inteligencia Empresarial** - Información automatizada y recomendaciones
+- �� **Inteligencia Empresarial** - Información automatizada y recomendaciones
 - 🏗️ **Diseño de Esquema Inteligente** - Arquitectura de base de datos optimizada para IA
 - ⚡ **Automatización de Flujos de Trabajo** - Optimización de procesos inteligente
 - 🔍 **Auditoría de Calidad de Datos** - Evaluación de calidad integral y correcciones
 - 📈 **Análisis Estadístico** - Análisis avanzado con pruebas de significancia
 
+---
+
 ## ✨ Características
 
-- 🔍 **Consultas de Lenguaje Natural** - Haga preguntas sobre sus datos en inglés simple
-- 📊 **Operaciones CRUD Completas** - Crear, leer, actualizar y eliminar registros
-- 🪝 **Gestión de Webhooks** - Crear y gestionar webhooks para notificaciones en tiempo real
-- 🏗️ **Gestión Avanzada de Esquemas** - Crear tablas, campos y gestionar la estructura de base
-- 🔍 **Descubrimiento de Bases** - Explore todas las bases accesibles y sus esquemas
-- 🔧 **Gestión de Campos** - Agregue, modifique y elimine campos programáticamente
-- 🔐 **Autenticación Segura** - Utiliza variables de entorno para credenciales
-- 🚀 **Configuración Fácil** - Múltiples opciones de instalación disponibles
-- ⚡ **Rápido y Confiable** - Construido con Node.js para rendimiento óptimo
-- 🎯 **33 Herramientas Potentes** - Cobertura completa de API Airtable con operaciones por lotes
-- 📎 **Gestión de Adjuntos** - Cargue archivos a través de URLs a campos de adjuntos
-- ⚡ **Operaciones por Lotes** - Crear, actualizar, eliminar hasta 10 registros a la vez
-- 👥 **Herramientas de Colaboración** - Gestione colaboradores de base y vistas compartidas
-- 🤖 **Integración IA** - Mensajes y muestreo para operaciones de datos inteligentes
-- 🔐 **Seguridad Empresarial** - OAuth2, limitación de velocidad, validación integral
+### 🔍 Datos y Consultas
+- **Consultas de Lenguaje Natural** - Haga preguntas sobre sus datos en inglés simple
+- **Operaciones CRUD Completas** - Crear, leer, actualizar y eliminar registros
+- **Descubrimiento de Bases** - Explore todas las bases accesibles y sus esquemas
+
+### 🏗️ Gestión de Estructura
+- **Gestión Avanzada de Esquemas** - Crear tablas, campos y gestionar la estructura de base
+- **Gestión de Campos** - Agregue, modifique y elimine campos programáticamente
+- **Operaciones por Lotes** - Crear, actualizar, eliminar hasta 10 registros a la vez
+
+### 🌐 Integración y Webhooks
+- **Gestión de Webhooks** - Crear y gestionar webhooks para notificaciones en tiempo real
+- **Gestión de Adjuntos** - Cargue archivos a través de URLs a campos de adjuntos
+- **Herramientas de Colaboración** - Gestione colaboradores de base y vistas compartidas
+
+### 🔐 Seguridad y Rendimiento
+- **Autenticación Segura** - Utiliza variables de entorno para credenciales
+- **Seguridad Empresarial** - OAuth2, limitación de velocidad, validación integral
+- **Rápido y Confiable** - Construido con Node.js para rendimiento óptimo
+
+### 🎯 Herramientas y APIs
+- **33 Herramientas Potentes** - Cobertura completa de API Airtable con operaciones por lotes
+- **Integración IA** - Mensajes y muestreo para operaciones de datos inteligentes
+- **Configuración Fácil** - Múltiples opciones de instalación disponibles
+
+---
 
 ## 📋 Requisitos Previos
 
 - Node.js 14+ instalado en su sistema
 - Una cuenta Airtable con Token de Acceso Personal
-- Su ID de Base Airtable
+- Su ID de Base Airtable (opcional en v3.2.5+)
+
+---
 
 ## 🚀 Inicio Rápido
 
 ### Paso 1: Obtenga sus Credenciales de Airtable
 
-1. **Token de Acceso Personal**: Visite [Cuenta de Airtable](https://airtable.com/acc
-ount) → Cree un token con los siguientes ámbitos:
-   - `data.records:read` - Leer registros de tablas
-   - `data.records:write` - Crear, actualizar, eliminar registros
-   - `schema.bases:read` - Ver esquemas de tablas
-   - `schema.bases:write` - **Nuevo en v1.5.0** - Crear/modificar tablas y campos
-   - `webhook:manage` - (Opcional) Para características de webhook
+#### 1. Token de Acceso Personal
+Visite [Cuenta de Airtable](https://airtable.com/account) → Cree un token con los siguientes ámbitos:
+- `data.records:read` - Leer registros de tablas
+- `data.records:write` - Crear, actualizar, eliminar registros
+- `schema.bases:read` - Ver esquemas de tablas
+- `schema.bases:write` - **Nuevo en v1.5.0** - Crear/modificar tablas y campos
+- `webhook:manage` - (Opcional) Para características de webhook
 
-2. **ID de Base**: Abra su base Airtable y copie el ID de la URL:
-   ```
-   https://airtable.com/[BASE_ID]/...
-   ```
+#### 2. ID de Base
+Abra su base Airtable y copie el ID de la URL:
+```
+https://airtable.com/[BASE_ID]/...
+```
 
 ### Paso 2: Instalación
 
 Elija uno de estos métodos de instalación:
 
-#### 🔷 Usuarios de TypeScript (Recomendado para Desarrollo)
+#### 🔷 TypeScript (Recomendado para Desarrollo)
 
 ```bash
 # Instalar con soporte de TypeScript
@@ -101,16 +131,14 @@ npm install -g @rashidazarang/airtable-mcp
 npm install --save-dev typescript @types/node
 ```
 
-#### 📦 Usuarios de JavaScript (Listo para Producción)
+#### 📦 JavaScript (Listo para Producción)
 
 **Opción A: Instalar a través de NPM (Recomendado)**
-
 ```bash
 npm install -g @rashidazarang/airtable-mcp
 ```
 
 **Opción B: Clonar desde GitHub**
-
 ```bash
 git clone https://github.com/rashidazarang/airtable-mcp.git
 cd airtable-mcp
@@ -135,12 +163,12 @@ AIRTABLE_BASE_ID=su_id_de_base_aqui  # OPCIONAL - puede ser descubierto usando l
 
 ### Paso 4: Configure su Cliente MCP
 
-#### 🔷 Configuración de TypeScript (Experiencia Mejorada del Desarrollador)
+#### 🔷 TypeScript (Experiencia Mejorada del Desarrollador)
 
-Agregue al archivo de configuración de Claude Desktop con binario de TypeScript:
+Agregue al archivo de configuración de Claude Desktop:
 
 **MacOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\\Claude\\claude_desktop_config.json`
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -161,12 +189,7 @@ Agregue al archivo de configuración de Claude Desktop con binario de TypeScript
 
 **Nota**: `AIRTABLE_BASE_ID` es opcional. Omítalo para descubrir bases usando la herramienta `list_bases`.
 
-#### 📦 Configuración de JavaScript (Estándar)
-
-Agregue al archivo de configuración de Claude Desktop:
-
-**MacOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+#### 📦 JavaScript (Estándar)
 
 ```json
 {
@@ -185,7 +208,7 @@ Agregue al archivo de configuración de Claude Desktop:
 
 **Nota**: `AIRTABLE_BASE_ID` es opcional. Omítalo para descubrir bases usando la herramienta `list_bases`.
 
-#### Configuración sin ID de Base (¡Nuevo!)
+#### Sin ID de Base (¡Nuevo!)
 
 Comience sin especificar una base y descúbralas dinámicamente:
 
@@ -208,6 +231,8 @@ Comience sin especificar una base y descúbralas dinámicamente:
 ### Paso 5: Reinicie su Cliente MCP
 
 Después de la configuración, reinicie Claude Desktop o su cliente MCP para cargar el servidor de Airtable.
+
+---
 
 ## 🎯 Ejemplos de Uso
 
@@ -284,11 +309,13 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 "Mostrarme todas las vistas compartidas en esta base"
 ```
 
+---
+
 ## 🛠️ Herramientas Disponibles (33 Total)
 
 ### 📊 Operaciones de Datos (7 herramientas)
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `list_tables` | Obtener todas las tablas en su base con información de esquema |
 | `list_records` | Consultar registros con filtrado y paginación opcional |
 | `get_record` | Recuperar un registro único por ID |
@@ -299,7 +326,7 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 
 ### 🪝 Gestión de Webhooks (5 herramientas)
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `list_webhooks` | Ver todos los webhooks configurados para su base |
 | `create_webhook` | Configurar notificaciones en tiempo real para cambios de datos |
 | `delete_webhook` | Eliminar configuraciones de webhook |
@@ -308,7 +335,7 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 
 ### 🔍 Descubrimiento de Esquema (6 herramientas) - **Nuevo en v1.5.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `list_bases` | Listar todas las bases Airtable accesibles con permisos |
 | `get_base_schema` | Obtener información de esquema completa para cualquier base |
 | `describe_table` | Obtener información de tabla detallada incluyendo todas las especificaciones de campo |
@@ -317,21 +344,21 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 
 ### 🏗️ Gestión de Tablas (3 herramientas) - **Nuevo en v1.5.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `create_table` | Crear nuevas tablas con definiciones de campo personalizadas |
 | `update_table` | Modificar nombres y descripciones de tablas |
 | `delete_table` | Eliminar tablas (requiere confirmación de seguridad) |
 
 ### 🔧 Gestión de Campos (3 herramientas) - **Nuevo en v1.5.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `create_field` | Agregar nuevos campos a tablas existentes con todos los tipos de campo |
 | `update_field` | Modificar propiedades de campo, nombres y opciones |
 | `delete_field` | Eliminar campos (requiere confirmación de seguridad) |
 
 ### ⚡ Operaciones por Lotes (4 herramientas) - **Nuevo en v1.6.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `batch_create_records` | Crear hasta 10 registros a la vez para mejor rendimiento |
 | `batch_update_records` | Actualizar hasta 10 registros simultáneamente |
 | `batch_delete_records` | Eliminar hasta 10 registros en una sola operación |
@@ -339,25 +366,25 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 
 ### 📎 Gestión de Adjuntos (1 herramienta) - **Nuevo en v1.6.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `upload_attachment` | Adjuntar archivos desde URLs públicas a campos de adjuntos |
 
 ### 👁️ Vistas Avanzadas (2 herramientas) - **Nuevo en v1.6.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `create_view` | Crear nuevas vistas (cuadrícula, formulario, calendario, etc.) con configuraciones personalizadas |
 | `get_view_metadata` | Obtener información de vista detallada incluyendo filtros y ordenamientos |
 
 ### 🏢 Gestión de Base (3 herramientas) - **Nuevo en v1.6.0**
 | Herramienta | Descripción |
-|------|-------------|
+|---|---|
 | `create_base` | Crear nuevas bases Airtable con estructuras de tabla iniciales |
 | `list_collaborators` | Ver colaboradores de base y sus niveles de permiso |
 | `list_shares` | Listar vistas compartidas y sus configuraciones públicas |
 
 ### 🤖 Suite de Inteligencia IA (10 prompts) - **Nuevo en v3.0.0**
 | Prompt | Descripción | Características Empresariales |
-|--------|-------------|-------------------|
+|---|---|---|
 | `analyze_data` | Análisis estadístico avanzado con información de ML | Intervalos de confianza, detección de anomalías |
 | `create_report` | Generación inteligente de informes con recomendaciones | Personalización multi-interesado, análisis de ROI |
 | `data_insights` | Inteligencia empresarial y descubrimiento de patrones | Correlaciones entre tablas, indicadores predictivos |
@@ -368,6 +395,8 @@ const insights = await server.handlePromptGet('analyze_data', analysis);
 | `natural_language_query` | Procesamiento inteligente de preguntas humanas | Conciencia de contexto, puntuación de confianza |
 | `smart_data_transformation` | Procesamiento de datos asistido por IA | Reglas de calidad, pistas de auditoría, optimización |
 | `automation_recommendations` | Sugerencias de optimización de flujos de trabajo | Viabilidad técnica, análisis de costo-beneficio |
+
+---
 
 ## 🔧 Configuración Avanzada
 
@@ -415,9 +444,11 @@ Si clonó el repositorio:
 }
 ```
 
+---
+
 ## 🧪 Pruebas
 
-### 🔷 Pruebas de TypeScript
+### 🔷 TypeScript
 
 Ejecute el conjunto de pruebas integral de TypeScript:
 
@@ -436,7 +467,15 @@ npm run build
 npm run start:ts
 ```
 
-### 📦 Pruebas de JavaScript
+**El conjunto de pruebas valida:**
+- Seguridad de Tipos - Validación en tiempo de compilación de todas las interfaces
+- Pruebas Empresariales - 33 herramientas con verificación de tipos estricta
+- Validación de Prompts IA - Todos los 10 templates de IA con tipificación adecuada
+- Manejo de Errores - Gestión de errores segura de tipos
+- Rendimiento - Operaciones concurrentes con seguridad de tipos
+- Integración - Cumplimiento completo del protocolo MCP
+
+### 📦 JavaScript
 
 Ejecute el conjunto de pruebas integral para verificar todas las 33 herramientas:
 
@@ -452,15 +491,7 @@ node airtable_simple.js &
 ./test_v1.6.0_comprehensive.sh
 ```
 
-El conjunto de pruebas de TypeScript valida:
-- **Seguridad de Tipos**: Validación en tiempo de compilación de todas las interfaces
-- **Pruebas Empresariales**: 33 herramientas con verificación de tipos estricta
-- **Validación de Prompts IA**: Todos los 10 templates de IA con tipificación adecuada
-- **Manejo de Errores**: Gestión de errores segura de tipos
-- **Rendimiento**: Operaciones concurrentes con seguridad de tipos
-- **Integración**: Cumplimiento completo del protocolo MCP
-
-El conjunto de pruebas de JavaScript valida:
+**El conjunto de pruebas valida:**
 - Todas las 33 herramientas con llamadas reales a API
 - Operaciones CRUD completas
 - Gestión avanzada de esquemas
@@ -473,7 +504,9 @@ El conjunto de pruebas de JavaScript valida:
 - Verificación de seguridad
 - Cobertura de pruebas del 100%
 
-## �� Solución de Problemas
+---
+
+## 🐛 Solución de Problemas
 
 ### Error "Conexión Rechazada"
 - Asegúrese de que el servidor MCP esté funcionando
@@ -495,6 +528,8 @@ Si el puerto 8010 está en uso:
 lsof -ti:8010 | xargs kill -9
 ```
 
+---
+
 ## 📚 Documentación
 
 ### 🔷 Documentación de TypeScript
@@ -511,18 +546,24 @@ lsof -ti:8010 | xargs kill -9
 - [Guía de Desarrollo](./DEVELOPMENT.md)
 - [Aviso de Seguridad](./SECURITY_NOTICE.md)
 
+---
+
 ## 📦 Historial de Versiones
 
-- **v3.1.0** (2025-08-16) - 🔷 **Soporte de TypeScript**: Seguridad de tipos de nivel empresarial, definiciones de tipo integrales, distribución dual JS/TS
-- **v3.0.0** (2025-08-16) - 🤖 **Agente IA Revolucionario**: 10 prompts inteligentes, análisis predictivo, procesamiento de lenguaje natural
-- **v2.2.3** (2025-08-16) - 🔒 **Lanzamiento de seguridad**: Correcciones finales de vulnerabilidad XSS y validación mejorada
-- **v2.2.0** (2025-08-16) - 🏆 **Lanzamiento principal**: Implementación completa del protocolo MCP 2024-11-05
-- **v1.6.0** (2025-08-15) - 🎆 **Lanzamiento principal**: Operaciones por lotes agregadas y gestión de adjuntos (33 herramientas totales)
-- **v1.5.0** (2025-08-15) - Gestión integral de esquemas agregada (23 herramientas totales)
-- **v1.4.0** (2025-08-14) - Soporte de webhook agregado y operaciones CRUD mejoradas (12 herramientas)
-- **v1.2.4** (2025-08-12) - Correcciones de seguridad y mejoras de estabilidad
-- **v1.2.3** (2025-08-11) - Correcciones de errores y manejo de errores
-- **v1.2.2** (2025-08-10) - Lanzamiento estable inicial
+| Versión | Fecha | Descripción |
+|---------|-------|-------------|
+| **v3.1.0** | 2025-08-16 | �� Soporte de TypeScript: Seguridad de tipos de nivel empresarial, distribución dual JS/TS |
+| **v3.0.0** | 2025-08-16 | 🤖 Agente IA Revolucionario: 10 prompts inteligentes, análisis predictivo |
+| **v2.2.3** | 2025-08-16 | 🔒 Lanzamiento de seguridad: Correcciones XSS y validación mejorada |
+| **v2.2.0** | 2025-08-16 | 🏆 Implementación completa del protocolo MCP 2024-11-05 |
+| **v1.6.0** | 2025-08-15 | 🎆 Operaciones por lotes y gestión de adjuntos (33 herramientas) |
+| **v1.5.0** | 2025-08-15 | Gestión integral de esquemas (23 herramientas) |
+| **v1.4.0** | 2025-08-14 | Soporte de webhook y operaciones CRUD mejoradas (12 herramientas) |
+| **v1.2.4** | 2025-08-12 | Correcciones de seguridad y mejoras de estabilidad |
+| **v1.2.3** | 2025-08-11 | Correcciones de errores y manejo de errores |
+| **v1.2.2** | 2025-08-10 | Lanzamiento estable inicial |
+
+---
 
 ## 📂 Estructura del Proyecto
 
@@ -542,13 +583,21 @@ airtable-mcp/
 └── types/                # Definiciones de tipo de TypeScript
 ```
 
+---
+
 ## 🤝 Contribuyendo
 
 ¡Las contribuciones son bienvenidas! Siéntase libre de enviar una Solicitud de Extracción. Para cambios principales, abra un problema primero para discutir lo que le gustaría cambiar.
 
+Para más detalles, consulte [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+---
+
 ## 📄 Licencia
 
 Licencia MIT - vea el archivo [LICENSE](./LICENSE) para más detalles
+
+---
 
 ## 🙏 Agradecimientos
 
@@ -556,11 +605,13 @@ Licencia MIT - vea el archivo [LICENSE](./LICENSE) para más detalles
 - Impulsado por [API de Airtable](https://airtable.com/developers/web/api/introduction)
 - Compatible con [Claude Desktop](https://claude.ai/) y otros clientes MCP
 
-## 📮 Soporte
+---
+
+## �� Soporte
 
 - **Problemas**: [Problemas de GitHub](https://github.com/rashidazarang/airtable-mcp/issues)
 - **Discusiones**: [Discusiones de GitHub](https://github.com/rashidazarang/airtable-mcp/discussions)
 
 ---
 
-**Versión**: 3.2.4 | **Estado**: 🔷 TypeScript Reparado + 🤖 Agente IA | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada (XSS Reparado) | **Última Actualización**: 9 de Septiembre de 2025
+**Versión**: 3.2.5 | **Estado**: 🔷 TypeScript Estable + 🤖 Agente IA | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **Última Actualización**: 7 de Diciembre de 2025
