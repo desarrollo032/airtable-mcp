@@ -1,0 +1,4 @@
+- [x] Identify the cause of duplicate "wrapper" tool warnings
+- [x] Fix the handle_exceptions decorator to preserve function names
+- [ ] Test the fix by running the server
+- [ ] Verify that warnings are eliminated

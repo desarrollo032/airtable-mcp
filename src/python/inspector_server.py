@@ -83,13 +83,14 @@ def handle_exceptions(func):
             error_trace = traceback.format_exc()
             logger.error(f"Error in MCP handler: {str(e)}\n{error_trace}")
             sys.stderr.write(f"Error in MCP handler: {str(e)}\n{error_trace}\n")
-            
+
             # For tool functions that return strings, return a formatted error message
             if hasattr(func, "__annotations__") and func.__annotations__.get("return") == str:
                 return f"Error: {str(e)}"
-            
+
             # For RPC methods that return dicts, return a properly formatted JSON error
             return {"error": {"code": -32000, "message": str(e)}}
+    wrapper.__name__ = func.__name__
     return wrapper
 
 # Patch the tool method to automatically apply error handling
