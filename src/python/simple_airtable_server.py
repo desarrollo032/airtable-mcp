@@ -73,7 +73,7 @@ async def airtable_api_call(endpoint, method="GET", data=None, params=None):
         return {"error": str(e)}
 
 # Claude-specific methods
-@app.rpc_method("resources/list")
+@mcp.rpc_method("resources/list")
 async def resources_list(params: Dict = None) -> Dict:
     """List available Airtable resources for Claude"""
     try:
@@ -86,7 +86,7 @@ async def resources_list(params: Dict = None) -> Dict:
         logger.error(f"Error in resources/list: {str(e)}")
         return {"error": {"code": -32000, "message": str(e)}}
 
-@app.rpc_method("prompts/list")
+@mcp.rpc_method("prompts/list")
 async def prompts_list(params: Dict = None) -> Dict:
     """List available prompts for Claude"""
     try:
@@ -100,7 +100,7 @@ async def prompts_list(params: Dict = None) -> Dict:
         return {"error": {"code": -32000, "message": str(e)}}
 
 # Airtable tool functions
-@app.tool()
+@mcp.tool()
 async def list_tables() -> str:
     """List all tables in the specified base"""
     try:
@@ -119,7 +119,7 @@ async def list_tables() -> str:
     except Exception as e:
         return f"Error listing tables: {str(e)}"
 
-@app.tool()
+@mcp.tool()
 async def list_records(table_name: str, max_records: int = 100) -> str:
     """List records from a table"""
     try:

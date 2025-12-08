@@ -702,7 +702,7 @@ Here's a basic example of implementing an MCP server:
 
     app = Server("example-server")
 
-    @app.list_resources()
+    @mcp.list_resources()
     async def list_resources() -> list[types.Resource]:
         return [
             types.Resource(
@@ -1135,11 +1135,11 @@ Here's a complete example of implementing prompts in an MCP server:
     # Initialize server
     app = Server("example-prompts-server")
 
-    @app.list_prompts()
+    @mcp.list_prompts()
     async def list_prompts() -> list[types.Prompt]:
         return list(PROMPTS.values())
 
-    @app.get_prompt()
+    @mcp.get_prompt()
     async def get_prompt(
         name: str, arguments: dict[str, str] | None = None
     ) -> types.GetPromptResult:
@@ -1430,7 +1430,7 @@ Here's a simple example of implementing resource support in an MCP server:
     ```python
     app = Server("example-server")
 
-    @app.list_resources()
+    @mcp.list_resources()
     async def list_resources() -> list[types.Resource]:
         return [
             types.Resource(
@@ -1440,7 +1440,7 @@ Here's a simple example of implementing resource support in an MCP server:
             )
         ]
 
-    @app.read_resource()
+    @mcp.read_resource()
     async def read_resource(uri: AnyUrl) -> str:
         if str(uri) == "file:///logs/app.log":
             log_contents = await read_log_file()
@@ -1911,7 +1911,7 @@ Here's an example of implementing a basic tool in an MCP server:
     ```python
     app = Server("example-server")
 
-    @app.list_tools()
+    @mcp.list_tools()
     async def list_tools() -> list[types.Tool]:
         return [
             types.Tool(
@@ -1928,7 +1928,7 @@ Here's an example of implementing a basic tool in an MCP server:
             )
         ]
 
-    @app.call_tool()
+    @mcp.call_tool()
     async def call_tool(
         name: str,
         arguments: dict

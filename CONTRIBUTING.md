@@ -71,7 +71,7 @@ espera.
 
 Cuando agregue nuevas herramientas de API de Airtable:
 
-1. Agregue la función de herramienta a `inspector_server.py` utilizando el decorador `@app.tool()`
+1. Agregue la función de herramienta a `inspector_server.py` utilizando el decorador `@mcp.tool()`
 2. Defina tipos claros de parámetros y retorno
 3. Proporcione una cadena de documentación descriptiva para la herramienta
 4. Actualice el archivo `inspector.py` para incluir la nueva herramienta en el esquema JSON
