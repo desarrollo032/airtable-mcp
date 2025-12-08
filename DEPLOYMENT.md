@@ -4,11 +4,12 @@ Este documento explica cómo desplegar el Airtable MCP Server en diferentes plat
 
 ## 📋 Información de Versiones
 
-### Versión Actual: 3.2.5
+### Versión Actual: 3.2.6
 - **Fecha de Lanzamiento**: Diciembre 2024
 - **Compatibilidad**: Python 3.8+, Node.js 18+
 - **Transportes Soportados**: STDIO, HTTP, SSE (Server-Sent Events)
 - **Plataformas**: Railway, Heroku, Docker, Local
+- **FastMCP**: ✅ Integración completa con FastMCP moderno
 
 ### Historial de Versiones Importantes
 
@@ -30,12 +31,13 @@ Este documento explica cómo desplegar el Airtable MCP Server en diferentes plat
 
 ### Compatibilidad
 
-| Versión | Python | Node.js | FastMCP | Transporte |
-|---------|--------|---------|---------|------------|
-| 3.2.x   | 3.8+   | 18+     | ✅      | STDIO/HTTP/SSE |
-| 3.1.x   | 3.8+   | 16+     | ❌      | STDIO       |
-| 2.x     | 3.6+   | ❌      | ❌      | STDIO       |
-| 1.x     | 3.6+   | ❌      | ❌      | STDIO       |
+| Versión | Python | Node.js | FastMCP | Transporte | Características |
+|---------|--------|---------|---------|------------|----------------|
+| 3.2.6   | 3.8+   | 18+     | ✅      | STDIO/HTTP/SSE | FastMCP moderno, Railway optimizado |
+| 3.2.5   | 3.8+   | 18+     | ✅      | STDIO/HTTP/SSE | ID base opcional, descubrimiento dinámico |
+| 3.1.x   | 3.8+   | 16+     | ❌      | STDIO       | TypeScript completo |
+| 2.x     | 3.6+   | ❌      | ❌      | STDIO       | Funcionalidad básica |
+| 1.x     | 3.6+   | ❌      | ❌      | STDIO       | Lanzamiento inicial |
 
 ### Actualizaciones Recomendadas
 
@@ -234,16 +236,19 @@ Requiere adaptación especial. Contactar para más detalles.
 
 ## 📋 Comandos Útiles por Versión
 
-### v3.2.x (FastMCP)
+### v3.2.6 (FastMCP Moderno)
 ```bash
-# Desarrollo local
+# Desarrollo local (STDIO)
 fastmcp run
 
-# Producción Railway
-# Automático con railway.json
+# Desarrollo con auto-reload (HTTP)
+npm run dev
+
+# Producción Railway (HTTP + SSE)
+npm start  # Automático con railway.json
 
 # Docker local
-docker run airtable-mcp:latest
+docker run -p 8000:8000 airtable-mcp:latest
 
 # Verificar configuración
 fastmcp run --help
@@ -284,6 +289,7 @@ python app.py
 ---
 
 **Última Actualización**: Diciembre 2024
-**Versión**: 3.2.5
-**FastMCP**: ✅ Compatible
+**Versión**: 3.2.6
+**FastMCP**: ✅ Integración Completa
 **SSE Streaming**: ✅ Disponible
+**Railway Optimized**: ✅ Docker Builder
