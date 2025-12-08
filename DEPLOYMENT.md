@@ -232,7 +232,58 @@ Requiere adaptación especial. Contactar para más detalles.
 - [Airtable API Reference](https://airtable.com/developers/web/api/introduction)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 
+## 📋 Comandos Útiles por Versión
+
+### v3.2.x (FastMCP)
+```bash
+# Desarrollo local
+fastmcp run
+
+# Producción Railway
+# Automático con railway.json
+
+# Docker local
+docker run airtable-mcp:latest
+
+# Verificar configuración
+fastmcp run --help
+```
+
+### v3.1.x - v3.0.x (TypeScript)
+```bash
+# Desarrollo
+npm run dev
+
+# Producción
+npm start
+
+# Build
+npm run build
+```
+
+### v2.x - v1.x (Python Only)
+```bash
+# Desarrollo
+python app.py
+
+# Producción
+python app.py
+```
+
+## 🔄 Migración entre Versiones
+
+### Checklist de Migración a v3.2.x
+- [ ] Backup de configuración actual (`.env`, variables Railway)
+- [ ] Actualizar código: `git pull origin main`
+- [ ] Instalar dependencias: `pip install -r requirements.txt && npm install`
+- [ ] Verificar `fastmcp.json` con nuevo esquema
+- [ ] Probar localmente: `fastmcp run`
+- [ ] Desplegar en Railway con nueva configuración
+- [ ] Verificar HTTP endpoint: `https://tu-app.railway.app/mcp`
+
 ---
 
-**Última Actualización**: 7 de Diciembre de 2025
+**Última Actualización**: Diciembre 2024
 **Versión**: 3.2.5
+**FastMCP**: ✅ Compatible
+**SSE Streaming**: ✅ Disponible
