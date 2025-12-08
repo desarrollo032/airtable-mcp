@@ -1,57 +1,23 @@
 #!/usr/bin/env python3
 """
-Airtable MCP Inspector Server
------------------------------
-A simple MCP server that implements the Airtable tools
+Airtable MCP Inspector Server - FastMCP 2.x
 """
 import os
+import json
+import requests
+from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 
 token = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
 base_id = os.getenv("AIRTABLE_BASE_ID")
-port = int(os.getenv("PORT", 8000))
+port = int(os.getenv("PORT", 8000))  # Railway asigna automáticamente PORT
 
-# Inicializar servidor MCP
-from fastmcp import MCPServer
+# Inicializar servidor FastMCP 2.x
+from fastmcp import FastMCP
 
-server = MCPServer("Airtable Tools")
-
-# Error handling decorator
-def handle_exceptions(func):
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except Exception as e:
-            error_trace = traceback.format_exc()
-            logger.error(f"Error in MCP handler: {str(e)}\n{error_trace}")
-            return {"error": {"code": -32000, "message": str(e)}}
-    wrapper.__name__ = func.__name__
-    return wrapper
-
-# Patch app.tool to use error handling
-original_tool = app.tool
-def patched_tool(*args, **kwargs):
-    def decorator(func):
-        wrapped_func = handle_exceptions(func)
-        return original_tool(*args, **kwargs)(wrapped_func)
-    return decorator
-app.tool = patched_tool
-
-# Get Airtable credentials from args, config or env
-token = args.api_token or config.get("airtable_token") or os.environ.get("AIRTABLE_PERSONAL_ACCESS_TOKEN", "")
-base_id = args.base_id or config.get("base_id") or os.environ.get("AIRTABLE_BASE_ID", "")
-
-if not token:
-    logger.warning("No Airtable API token provided. Use --token, --config, or set AIRTABLE_PERSONAL_ACCESS_TOKEN")
-else:
-    logger.info("Airtable authentication configured")
-
-if base_id:
-    logger.info(f"Using base ID: {base_id}")
-else:
-    logger.warning("No base ID provided. Use --base, --config, or set AIRTABLE_BASE_ID")
+app = FastMCP("Airtable Tools")  # ya no se usa MCPServer
 
 # Helper function for Airtable API
 async def api_call(endpoint, method="GET", data=None, params=None):
@@ -66,21 +32,9 @@ async def api_call(endpoint, method="GET", data=None, params=None):
     url = f"https://api.airtable.com/v0/{endpoint}"
 
     try:
-        if method == "GET":
-            response = requests.get(url, headers=headers, params=params, timeout=REQUEST_TIMEOUT_SECONDS)
-        elif method == "POST":
-            response = requests.post(url, headers=headers, json=data, timeout=REQUEST_TIMEOUT_SECONDS)
-        elif method == "PATCH":
-            response = requests.patch(url, headers=headers, json=data, timeout=REQUEST_TIMEOUT_SECONDS)
-        elif method == "DELETE":
-            response = requests.delete(url, headers=headers, params=params, timeout=REQUEST_TIMEOUT_SECONDS)
-        else:
-            raise ValueError(f"Unsupported method: {method}")
-
+        response = requests.request(method, url, headers=headers, params=params, json=data, timeout=30)
         response.raise_for_status()
         return response.json()
-    except requests_exceptions.Timeout:
-        return {"error": f"Request to Airtable timed out after {REQUEST_TIMEOUT_SECONDS}s"}
     except Exception as e:
         return {"error": str(e)}
 
@@ -118,14 +72,57 @@ async def list_records(table_name: str, max_records: Optional[int] = 100, filter
     return "\n".join([f"{i+1}. {r['id']} - {r.get('fields', {})}" for i, r in enumerate(records)]) or "No records found."
 
 @app.tool()
+async def create_records(table_name: str, records_json: str) -> str:
+    if not base_id:
+        return "No base ID set."
+    try:
+        records_data = json.loads(records_json)
+        if not isinstance(records_data, list):
+            records_data = [records_data]
+        records = [{"fields": record} for record in records_data]
+        data = {"records": records}
+        result = await api_call(f"{base_id}/{table_name}", method="POST", data=data)
+        if "error" in result:
+            return f"Error: {result['error']}"
+        created_records = result.get("records", [])
+        return f"Successfully created {len(created_records)} records."
+    except json.JSONDecodeError:
+        return "Error: Invalid JSON format in records_json parameter."
+    except Exception as e:
+        return f"Error creating records: {str(e)}"
+
+@app.tool()
+async def update_records(table_name: str, records_json: str) -> str:
+    if not base_id:
+        return "No base ID set."
+    try:
+        records_data = json.loads(records_json)
+        if not isinstance(records_data, list):
+            records_data = [records_data]
+        records = []
+        for record in records_data:
+            if "id" not in record:
+                return "Error: Each record must have an 'id' field."
+            rec_id = record.pop("id")
+            fields = record.get("fields", record)
+            records.append({"id": rec_id, "fields": fields})
+        data = {"records": records}
+        result = await api_call(f"{base_id}/{table_name}", method="PATCH", data=data)
+        if "error" in result:
+            return f"Error: {result['error']}"
+        updated_records = result.get("records", [])
+        return f"Successfully updated {len(updated_records)} records."
+    except json.JSONDecodeError:
+        return "Error: Invalid JSON format in records_json parameter."
+    except Exception as e:
+        return f"Error updating records: {str(e)}"
+
+@app.tool()
 async def set_base_id(base_id_param: str) -> str:
     global base_id
     base_id = base_id_param
     return f"Base ID set to: {base_id}"
 
-# Start server
 if __name__ == "__main__":
-    host = os.environ.get("HOST", args.host)
-    port = int(os.environ.get("PORT", args.port))
-    logger.info(f"Starting server on {host}:{port}")
-    app.run()
+    # No fijes el puerto si vas a usar Railway, solo usa el PORT del entorno
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
