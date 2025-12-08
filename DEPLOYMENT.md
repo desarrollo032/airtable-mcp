@@ -111,27 +111,55 @@ npm install
 
 ## 🐳 Despliegue con Docker
 
-### Dockerfile
+### Dockerfile Multi-Lenguaje (v3.2.x)
 ```dockerfile
-FROM python:3.10-slim
+FROM python:3.12-slim
 
-WORKDIR /app
+# Instalar Node.js 22
+RUN apt-get update && apt-get install -y curl build-essential \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Configurar dependencias
+COPY package.json package-lock.json requirements.txt ./
+RUN python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+RUN npm install
 
+# Copiar proyecto
 COPY . .
 
+# Variables de entorno
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
+ENV NODE_ENV=production
+EXPOSE 8000
 
-CMD ["python", "app.py"]
+# Comando FastMCP
+CMD ["bash", "-c", ". .venv/bin/activate && fastmcp run"]
 ```
 
 ### Construir y Ejecutar
 ```bash
+# Construir imagen
 docker build -t airtable-mcp:latest .
-docker run -e AIRTABLE_TOKEN=your_token -p 8000:8000 airtable-mcp:latest
+
+# Ejecutar con variables de entorno
+docker run -e AIRTABLE_TOKEN=your_token \
+           -e AIRTABLE_BASE_ID=your_base_id \
+           -p 8000:8000 \
+           airtable-mcp:latest
+```
+
+### Modos de Ejecución
+
+#### Desarrollo Local (STDIO)
+```bash
+docker run --rm -it airtable-mcp:latest fastmcp run
+```
+
+#### Producción (HTTP + SSE)
+```bash
+docker run -e MCP_TRANSPORT=http -p 8000:8000 airtable-mcp:latest
 ```
 
 ## 🌍 Otros Proveedores de Hosting
@@ -163,11 +191,16 @@ Requiere adaptación especial. Contactar para más detalles.
 
 ## 🔧 Archivos de Configuración
 
-- **Procfile** - Configuración para Heroku y plataformas similares
-- **railway.json** - Configuración específica para Railway.app
-- **railway.toml** - Configuración alternativa para Railway
+### v3.2.x (FastMCP Moderno)
+- **fastmcp.json** - Configuración FastMCP con transporte HTTP/SSE
+- **railway.json** - Configuración Railway con Docker builder
+- **Dockerfile** - Imagen multi-lenguaje (Python + Node.js)
+- **Procfile** - Configuración legacy para Heroku
+
+### Versiones Anteriores
 - **app.py** - Punto de entrada para Railpack/Nixpacks
 - **main.py** - Punto de entrada alternativo
+- **railway.toml** - Configuración alternativa para Railway
 
 ## ✅ Verificar que Funciona
 
