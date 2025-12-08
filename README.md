@@ -121,7 +121,30 @@ https://airtable.com/[BASE_ID]/...
 
 Elija uno de estos métodos de instalación:
 
-#### 🔷 TypeScript (Recomendado para Desarrollo)
+#### 🚀 FastMCP (Recomendado - v3.2.x+)
+
+**Nueva versión con FastMCP moderno:**
+```bash
+# Instalar FastMCP CLI
+pip install fastmcp
+
+# Ejecutar el servidor
+fastmcp run
+
+# Para desarrollo con auto-reload
+npm run dev
+
+# Para producción (Railway)
+npm start
+```
+
+**Características de FastMCP:**
+- ✅ Transporte HTTP con SSE para streaming en tiempo real
+- ✅ Configuración automática de STDIO/HTTP según entorno
+- ✅ Compatible con Railway, Docker y desarrollo local
+- ✅ No requiere compilación en GitHub Actions
+
+#### 🔷 TypeScript (Desarrollo Avanzado)
 
 ```bash
 # Instalar con soporte de TypeScript
@@ -131,9 +154,9 @@ npm install -g @rashidazarang/airtable-mcp
 npm install --save-dev typescript @types/node
 ```
 
-#### 📦 JavaScript (Listo para Producción)
+#### 📦 JavaScript (Legacy)
 
-**Opción A: Instalar a través de NPM (Recomendado)**
+**Opción A: Instalar a través de NPM**
 ```bash
 npm install -g @rashidazarang/airtable-mcp
 ```
@@ -163,12 +186,32 @@ AIRTABLE_BASE_ID=su_id_de_base_aqui  # OPCIONAL - puede ser descubierto usando l
 
 ### Paso 4: Configure su Cliente MCP
 
+#### 🚀 FastMCP (Recomendado - v3.2.x+)
+
+**Configuración moderna con FastMCP:**
+
+```json
+{
+  "mcpServers": {
+    "airtable-fastmcp": {
+      "command": "fastmcp",
+      "args": ["run"],
+      "env": {
+        "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE",
+        "AIRTABLE_BASE_ID": "SU_ID_DE_BASE"
+      }
+    }
+  }
+}
+```
+
+**Ventajas de FastMCP:**
+- ✅ Auto-detección de transporte (STDIO para desarrollo, HTTP para producción)
+- ✅ Soporte SSE para streaming en tiempo real
+- ✅ Configuración simplificada
+- ✅ Compatible con Railway y Docker
+
 #### 🔷 TypeScript (Experiencia Mejorada del Desarrollador)
-
-Agregue al archivo de configuración de Claude Desktop:
-
-**MacOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -187,9 +230,7 @@ Agregue al archivo de configuración de Claude Desktop:
 }
 ```
 
-**Nota**: `AIRTABLE_BASE_ID` es opcional. Omítalo para descubrir bases usando la herramienta `list_bases`.
-
-#### 📦 JavaScript (Estándar)
+#### 📦 JavaScript (Legacy)
 
 ```json
 {
@@ -206,8 +247,6 @@ Agregue al archivo de configuración de Claude Desktop:
 }
 ```
 
-**Nota**: `AIRTABLE_BASE_ID` es opcional. Omítalo para descubrir bases usando la herramienta `list_bases`.
-
 #### Sin ID de Base (¡Nuevo!)
 
 Comience sin especificar una base y descúbralas dinámicamente:
@@ -216,8 +255,8 @@ Comience sin especificar una base y descúbralas dinámicamente:
 {
   "mcpServers": {
     "airtable": {
-      "command": "npx",
-      "args": ["@rashidazarang/airtable-mcp"],
+      "command": "fastmcp",
+      "args": ["run"],
       "env": {
         "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE"
       }
