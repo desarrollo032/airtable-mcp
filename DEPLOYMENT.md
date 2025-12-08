@@ -1,6 +1,73 @@
 # Guía de Despliegue - Airtable MCP Server
 
-Este documento explica cómo desplegar el Airtable MCP Server en diferentes plataformas.
+Este documento explica cómo desplegar el Airtable MCP Server en diferentes plataformas, incluyendo información de versiones y compatibilidad.
+
+## 📋 Información de Versiones
+
+### Versión Actual: 3.2.5
+- **Fecha de Lanzamiento**: Diciembre 2024
+- **Compatibilidad**: Python 3.8+, Node.js 18+
+- **Transportes Soportados**: STDIO, HTTP, SSE (Server-Sent Events)
+- **Plataformas**: Railway, Heroku, Docker, Local
+
+### Historial de Versiones Importantes
+
+#### v3.2.x (Actual)
+- ✅ Soporte completo para FastMCP moderno
+- ✅ Transporte HTTP con SSE para streaming en tiempo real
+- ✅ Despliegue dual (Python + TypeScript)
+- ✅ Compatibilidad con Railway.app optimizada
+
+#### v3.1.x - v3.0.x
+- ✅ Soporte para TypeScript completo
+- ✅ Herramientas avanzadas de Airtable
+- ✅ Configuración mejorada de entornos
+
+#### v1.x - v2.x
+- ✅ Funcionalidad básica de MCP
+- ✅ Integración con Airtable API
+- ✅ Soporte para múltiples bases
+
+### Compatibilidad
+
+| Versión | Python | Node.js | FastMCP | Transporte |
+|---------|--------|---------|---------|------------|
+| 3.2.x   | 3.8+   | 18+     | ✅      | STDIO/HTTP/SSE |
+| 3.1.x   | 3.8+   | 16+     | ❌      | STDIO       |
+| 2.x     | 3.6+   | ❌      | ❌      | STDIO       |
+| 1.x     | 3.6+   | ❌      | ❌      | STDIO       |
+
+### Actualizaciones Recomendadas
+
+#### De v3.1.x a v3.2.x
+```bash
+# Actualizar dependencias
+pip install -r requirements.txt --upgrade
+npm update
+
+# Verificar configuración FastMCP
+# Asegurarse de que fastmcp.json use el nuevo esquema
+```
+
+#### De v2.x/v1.x a v3.x
+```bash
+# Backup de configuración actual
+cp .env .env.backup
+
+# Actualizar completamente
+git pull origin main
+pip install -r requirements.txt
+npm install
+
+# Revisar variables de entorno (AIRTABLE_BASE_ID ahora opcional)
+```
+
+## ⚠️ Notas de Compatibilidad
+
+- **FastMCP**: Las versiones 3.2.x requieren FastMCP moderno para despliegue HTTP
+- **Variables de Entorno**: `AIRTABLE_BASE_ID` es opcional desde v3.2.5
+- **Docker**: Imagen actualizada a Python 3.12 y Node.js 22
+- **Railway**: Configuración optimizada para el nuevo sistema de despliegue
 
 ## 🚀 Despliegue en Railway.app
 
