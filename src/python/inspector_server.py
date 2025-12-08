@@ -4,62 +4,19 @@ Airtable MCP Inspector Server
 -----------------------------
 A simple MCP server that implements the Airtable tools
 """
-
 import os
-import sys
-import json
-import logging
-import requests
-import argparse
-import traceback
-from requests import exceptions as requests_exceptions
-from typing import Optional
-
-# Import MCP
-try:
-    from mcp.server.fastmcp import FastMCP
-except ImportError:
-    print("Error: MCP SDK not found. Please install with 'pip install mcp'")
-    sys.exit(1)
-
-# Load environment variables
 from dotenv import load_dotenv
+
 load_dotenv()
 
-# Logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("airtable-mcp")
+token = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
+base_id = os.getenv("AIRTABLE_BASE_ID")
+port = int(os.getenv("PORT", 8000))
 
-# Timeout
-REQUEST_TIMEOUT_SECONDS = float(os.environ.get("AIRTABLE_REQUEST_TIMEOUT", "30"))
+# Inicializar servidor MCP
+from fastmcp import MCPServer
 
-# Command-line args
-def parse_args():
-    parser = argparse.ArgumentParser(description="Airtable MCP Server")
-    parser.add_argument("--token", dest="api_token", help="Airtable Personal Access Token")
-    parser.add_argument("--base", dest="base_id", help="Airtable Base ID")
-    parser.add_argument("--config", dest="config_json", help="Configuration as JSON (for Smithery integration)")
-    parser.add_argument("--host", dest="host", default="127.0.0.1", help="Host to bind the server to")
-    parser.add_argument("--port", dest="port", type=int, default=8000, help="Port to bind the server to")
-    return parser.parse_args()
-
-args = parse_args()
-
-# Load config JSON if provided
-config = {}
-if args.config_json:
-    try:
-        config_str = args.config_json.rstrip('\\"').strip()
-        if config_str.startswith('"') and config_str.endswith('"'):
-            config_str = config_str[1:-1]
-        config_str = config_str.replace('\\"', '"').replace('\\\\', '\\')
-        config = json.loads(config_str)
-        logger.info(f"Loaded config: {config}")
-    except Exception as e:
-        logger.error(f"Failed to parse config JSON: {e}")
-
-# Create MCP server
-app = FastMCP("Airtable Tools")
+server = MCPServer("Airtable Tools")
 
 # Error handling decorator
 def handle_exceptions(func):
