@@ -11,8 +11,12 @@ import { RateLimiter } from './app/rateLimiter';
 import { AirtableClient } from './app/airtable-client';
 import { GovernanceService } from './app/governance';
 import { ExceptionStore } from './app/exceptions';
+import { FastMCPService } from './app/fastmcp-service';
+import { AuthService } from './app/auth-service';
+import { ExternalIntegrationsService } from './app/integrations-service';
 import { registerAllTools } from './app/tools';
 import { AppContext } from './app/context';
+import { setupChatGPTIntegration } from './app/chatgpt-integration';
 
 
 const PROTOCOL_VERSION = '2025-12-08';
@@ -32,13 +36,19 @@ function buildContext(config: ReturnType<typeof loadConfig>, rootLogger: Logger)
 
   const governance = new GovernanceService(config.governance);
   const exceptions = new ExceptionStore(config.exceptionQueueSize, rootLogger);
+  const fastmcp = new FastMCPService(config.fastmcp, rootLogger);
+  const auth = new AuthService(config.fastmcp, rootLogger);
+  const integrations = new ExternalIntegrationsService(config.integrations, rootLogger);
 
   return {
     config,
     logger: rootLogger,
     airtable,
     governance,
-    exceptions
+    exceptions,
+    fastmcp,
+    auth,
+    integrations
   };
 }
 
@@ -72,26 +82,27 @@ export async function start(): Promise<void> {
   await server.connect(stdioTransport);
   logger.info('MCP server connected over Stdio');
 
-  // Optionally start HTTP transport for remote clients
-  const transportType = process.env.MCP_TRANSPORT;
-  if (transportType === 'http') {
-    const port = process.env.PORT ? Number(process.env.PORT) : 8000;
-    const useSSE = process.env.MCP_USE_SSE === 'true';
-    const httpTransport = new HttpServerTransport({ host: '0.0.0.0', port, useSSE });
-    await server.connect(httpTransport);
-    logger.info('MCP server connected over HTTP', { port, useSSE });
-  }
+  // Always start HTTP transport for ChatGPT integration
+  const port = process.env.PORT ? Number(process.env.PORT) : 8000;
+  const useSSE = process.env.MCP_USE_SSE !== 'false'; // Default to true for ChatGPT
+  const httpTransport = new HttpServerTransport({ host: '0.0.0.0', port, useSSE });
+  await server.connect(httpTransport);
+  logger.info('MCP server connected over HTTP', { port, useSSE });
+
+  // Add ChatGPT integration endpoint
+  setupChatGPTIntegration(server, context);
 
   logger.info('Airtable Brain MCP server ready', {
     version: config.version,
     protocolVersion: PROTOCOL_VERSION,
-    transport: transportType
+    transport: 'http+sse',
+    chatgptEnabled: true
   });
 
   const shutdown = async (signal: string) => {
     logger.info('Shutting down due to signal', { signal });
     await server.close();
-    await transport.close();
+    await httpTransport.close();
     process.exit(0);
   };
 

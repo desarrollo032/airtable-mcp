@@ -16,12 +16,31 @@ export interface AirtableAuthConfig {
   allowedBases: string[];
 }
 
+export interface FastMCPConfig {
+  logLevel: LogLevel;
+  maskErrorDetails: boolean;
+  strictInputValidation: boolean;
+  includeFastMCPMeta: boolean;
+  serverAuth?: string;
+  jwtJwksUri?: string;
+  jwtIssuer?: string;
+  jwtAudience?: string;
+}
+
+export interface ExternalIntegrations {
+  openaiApiKey?: string;
+  redisUrl?: string;
+  databaseUrl?: string;
+}
+
 export interface AppConfig {
   version: string;
   auth: AirtableAuthConfig;
   governance: GovernanceSnapshot;
   logLevel: LogLevel;
   exceptionQueueSize: number;
+  fastmcp: FastMCPConfig;
+  integrations: ExternalIntegrations;
 }
 
 const DEFAULT_EXCEPTION_QUEUE_SIZE = 500;
@@ -140,6 +159,27 @@ function buildGovernanceSnapshot(allowedBases: string[]): GovernanceSnapshot {
   return governanceOutputSchema.parse(merged);
 }
 
+function loadFastMCPConfig(): FastMCPConfig {
+  return {
+    logLevel: resolveLogLevel(),
+    maskErrorDetails: process.env.FASTMCP_MASK_ERROR_DETAILS === 'true',
+    strictInputValidation: process.env.FASTMCP_STRICT_INPUT_VALIDATION !== 'false',
+    includeFastMCPMeta: process.env.FASTMCP_INCLUDE_FASTMCP_META === 'true',
+    serverAuth: process.env.FASTMCP_SERVER_AUTH,
+    jwtJwksUri: process.env.FASTMCP_SERVER_AUTH_JWT_JWKS_URI,
+    jwtIssuer: process.env.FASTMCP_SERVER_AUTH_JWT_ISSUER,
+    jwtAudience: process.env.FASTMCP_SERVER_AUTH_JWT_AUDIENCE
+  };
+}
+
+function loadExternalIntegrations(): ExternalIntegrations {
+  return {
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    redisUrl: process.env.REDIS_URL,
+    databaseUrl: process.env.DATABASE_URL
+  };
+}
+
 export function loadConfig(): AppConfig {
   const personalAccessToken =
     process.env.AIRTABLE_PAT ||
@@ -174,6 +214,8 @@ export function loadConfig(): AppConfig {
     exceptionQueueSize:
       Number.parseInt(process.env.EXCEPTION_QUEUE_SIZE || '', 10) > 0
         ? Number.parseInt(process.env.EXCEPTION_QUEUE_SIZE as string, 10)
-        : DEFAULT_EXCEPTION_QUEUE_SIZE
+        : DEFAULT_EXCEPTION_QUEUE_SIZE,
+    fastmcp: loadFastMCPConfig(),
+    integrations: loadExternalIntegrations()
   };
 }
