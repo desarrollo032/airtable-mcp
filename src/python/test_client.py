@@ -10,26 +10,9 @@ import time
 from typing import Dict, Any
 from urllib.parse import quote
 
-# Load credentials from environment variables
+# Load credentials from environment variables (with defaults for import safety)
 TOKEN = os.environ.get('AIRTABLE_TOKEN', 'YOUR_AIRTABLE_TOKEN_HERE')
 BASE_ID = os.environ.get('AIRTABLE_BASE_ID', 'YOUR_BASE_ID_HERE')
-
-if TOKEN == 'YOUR_AIRTABLE_TOKEN_HERE' or BASE_ID == 'YOUR_BASE_ID_HERE':
-    print("Error: Please set AIRTABLE_TOKEN and AIRTABLE_BASE_ID environment variables")
-    print("Example: export AIRTABLE_TOKEN=your_token_here")
-    print("         export AIRTABLE_BASE_ID=your_base_id_here")
-    sys.exit(1)
-
-# Validate BASE_ID format to prevent injection
-if not all(c.isalnum() or c in '-_' for c in BASE_ID):
-    print(f"Error: Invalid BASE_ID format: {BASE_ID}")
-    print("BASE_ID should only contain alphanumeric characters, hyphens, and underscores")
-    sys.exit(1)
-
-# Validate TOKEN format (basic check)
-if not TOKEN or len(TOKEN) < 10:
-    print("Error: Invalid AIRTABLE_TOKEN format")
-    sys.exit(1)
 
 # Helper function to directly make Airtable API calls
 def api_call(endpoint, token=None):
@@ -115,4 +98,21 @@ async def main():
                 print(f"   - {field['name']} ({field['type']})")
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    if TOKEN == 'YOUR_AIRTABLE_TOKEN_HERE' or BASE_ID == 'YOUR_BASE_ID_HERE':
+        print("Error: Please set AIRTABLE_TOKEN and AIRTABLE_BASE_ID environment variables")
+        print("Example: export AIRTABLE_TOKEN=your_token_here")
+        print("         export AIRTABLE_BASE_ID=your_base_id_here")
+        sys.exit(1)
+
+    # Validate BASE_ID format to prevent injection
+    if not all(c.isalnum() or c in '-_' for c in BASE_ID):
+        print(f"Error: Invalid BASE_ID format: {BASE_ID}")
+        print("BASE_ID should only contain alphanumeric characters, hyphens, and underscores")
+        sys.exit(1)
+
+    # Validate TOKEN format (basic check)
+    if not TOKEN or len(TOKEN) < 10:
+        print("Error: Invalid AIRTABLE_TOKEN format")
+        sys.exit(1)
+
+    asyncio.run(main())
