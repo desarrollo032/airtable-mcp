@@ -5,6 +5,9 @@
   "source": {
     "type": "filesystem",
     "path": "src/python/inspector_server.py",
-    "entrypoint": "app"
-  }
+    "entrypoint": "mcp"
+  },
+  "transport": "http",
+  "port": 8000
 }
+

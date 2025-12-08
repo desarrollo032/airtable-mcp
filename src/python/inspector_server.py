@@ -17,7 +17,7 @@ port = int(os.getenv("PORT", 8000))  # Railway asigna automáticamente PORT
 # Inicializar servidor FastMCP 2.x
 from fastmcp import FastMCP
 
-app = FastMCP("Airtable Tools")  # ya no se usa MCPServer
+mcp = FastMCP("Airtable Tools")   # ESTE ES EL ÚNICO SERVIDOR VÁLIDO
 
 # Helper function for Airtable API
 async def api_call(endpoint, method="GET", data=None, params=None):
@@ -38,8 +38,11 @@ async def api_call(endpoint, method="GET", data=None, params=None):
     except Exception as e:
         return {"error": str(e)}
 
-# MCP tools
-@app.tool()
+# --------------------------------------
+# MCP TOOLS
+# --------------------------------------
+
+@mcp.tool()
 async def list_bases() -> str:
     result = await api_call("meta/bases")
     if "error" in result:
@@ -47,7 +50,8 @@ async def list_bases() -> str:
     bases = result.get("bases", [])
     return "\n".join([f"{i+1}. {b['name']} (ID: {b['id']})" for i, b in enumerate(bases)]) or "No bases found."
 
-@app.tool()
+
+@mcp.tool()
 async def list_tables(base_id_param: Optional[str] = None) -> str:
     current_base = base_id_param or base_id
     if not current_base:
@@ -58,7 +62,8 @@ async def list_tables(base_id_param: Optional[str] = None) -> str:
     tables = result.get("tables", [])
     return "\n".join([f"{i+1}. {t['name']} (ID: {t['id']})" for i, t in enumerate(tables)]) or "No tables found."
 
-@app.tool()
+
+@mcp.tool()
 async def list_records(table_name: str, max_records: Optional[int] = 100, filter_formula: Optional[str] = None) -> str:
     if not base_id:
         return "No base ID set."
@@ -71,7 +76,8 @@ async def list_records(table_name: str, max_records: Optional[int] = 100, filter
     records = result.get("records", [])
     return "\n".join([f"{i+1}. {r['id']} - {r.get('fields', {})}" for i, r in enumerate(records)]) or "No records found."
 
-@app.tool()
+
+@mcp.tool()
 async def create_records(table_name: str, records_json: str) -> str:
     if not base_id:
         return "No base ID set."
@@ -91,7 +97,8 @@ async def create_records(table_name: str, records_json: str) -> str:
     except Exception as e:
         return f"Error creating records: {str(e)}"
 
-@app.tool()
+
+@mcp.tool()
 async def update_records(table_name: str, records_json: str) -> str:
     if not base_id:
         return "No base ID set."
@@ -117,12 +124,20 @@ async def update_records(table_name: str, records_json: str) -> str:
     except Exception as e:
         return f"Error updating records: {str(e)}"
 
-@app.tool()
+
+@mcp.tool()
 async def set_base_id(base_id_param: str) -> str:
     global base_id
     base_id = base_id_param
     return f"Base ID set to: {base_id}"
 
+
+# --------------------------------------
+# RUN FASTMCP SERVER (HTTP para Railway)
+# --------------------------------------
 if __name__ == "__main__":
-    # No fijes el puerto si vas a usar Railway, solo usa el PORT del entorno
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+    mcp.run(
+        transport="http",
+        host="0.0.0.0",
+        port=port
+    )
