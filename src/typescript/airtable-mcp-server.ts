@@ -1,7 +1,10 @@
 #!/usr/bin/env node
-import { McpServer } from '@modelcontextprotocol/sdk/dist/esm/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
-import { HttpServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/http.js';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { HttpServerTransport } = require('@modelcontextprotocol/sdk/server/http');
 import { loadConfig } from './app/config';
 import { Logger } from './app/logger';
 import { RateLimiter } from './app/rateLimiter';
@@ -11,7 +14,9 @@ import { ExceptionStore } from './app/exceptions';
 import { registerAllTools } from './app/tools';
 import { AppContext } from './app/context';
 
-const PROTOCOL_VERSION = '2024-11-05';
+
+const PROTOCOL_VERSION = '2025-12-08';
+
 
 function buildContext(config: ReturnType<typeof loadConfig>, rootLogger: Logger): AppContext {
   const baseLimiter = new RateLimiter({ maxRequestsPerSecond: 5 });

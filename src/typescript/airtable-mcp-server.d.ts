@@ -14,6 +14,7 @@
  * Author: Rashid Azarang
  * License: MIT
  */
+
 import { MCPServerInfo } from '../types/index';
 import { ToolResponse } from '../types/tools';
 declare class AirtableMCPServer {
