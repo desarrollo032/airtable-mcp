@@ -24,6 +24,18 @@
 
 ## Últimas Versiones
 
+### 🚀 v3.2.6 - Integración FastMCP Moderna y Despliegue Optimizado
+
+**Mejoras Principales** con compatibilidad completa con versiones anteriores:
+- ⚡ **FastMCP Moderno** - Integración completa con FastMCP para transporte HTTP/SSE
+- 🌐 **Transporte HTTP con SSE** - Streaming en tiempo real para aplicaciones de producción
+- 🚂 **Despliegue Railway Optimizado** - Configuración Docker builder con manejo dinámico de puertos
+- 🏗️ **Arquitectura Multi-Lenguaje** - Soporte completo para Python, Node.js y TypeScript
+- 🔧 **Configuración Automática** - Auto-detección de STDIO/HTTP según entorno
+- 📦 **Sin Compilación en GitHub Actions** - Ejecución directa sin pasos de build
+- 🐳 **Docker Producción** - Imágenes optimizadas para Railway y entornos de producción
+- 🔄 **Comandos Diferenciados** - `npm run dev` para desarrollo, `npm start` para producción
+
 ### 🚀 v3.2.5 - ID de Base Opcional y Soporte Mejorado para Múltiples Bases
 
 **Mejoras Principales** con compatibilidad completa con versiones anteriores:
