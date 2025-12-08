@@ -1,10 +1,7 @@
 #!/usr/bin/env node
-
-// Import via require to avoid TS type resolution issues with deep subpath exports
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio');
+import { McpServer } from '@modelcontextprotocol/sdk/dist/esm/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/stdio.js';
+import { HttpServerTransport } from '@modelcontextprotocol/sdk/dist/esm/server/http.js';
 import { loadConfig } from './app/config';
 import { Logger } from './app/logger';
 import { RateLimiter } from './app/rateLimiter';
@@ -65,12 +62,25 @@ export async function start(): Promise<void> {
 
   registerAllTools(server, context);
 
-  const transport = new StdioServerTransport();
+  // Elegir transport según variable de entorno
+  const transportType = process.env.MCP_TRANSPORT || 'stdio';
+  let transport;
+
+  if (transportType === 'http') {
+    const port = process.env.PORT ? Number(process.env.PORT) : 8000;
+    transport = new HttpServerTransport({ host: '0.0.0.0', port });
+    logger.info('Starting MCP server over HTTP', { port });
+  } else {
+    transport = new StdioServerTransport();
+    logger.info('Starting MCP server over Stdio');
+  }
+
   await server.connect(transport);
 
   logger.info('Airtable Brain MCP server ready', {
     version: config.version,
-    protocolVersion: PROTOCOL_VERSION
+    protocolVersion: PROTOCOL_VERSION,
+    transport: transportType
   });
 
   const shutdown = async (signal: string) => {
@@ -86,7 +96,6 @@ export async function start(): Promise<void> {
 
 if (typeof require !== 'undefined' && require.main === module) {
   start().catch((error) => {
-    // eslint-disable-next-line no-console
     console.error('Failed to start Airtable Brain MCP server:', error);
     process.exit(1);
   });
