@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtable MCP OAuth Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #18b4f1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .session-form {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        button {
+            background: #18b4f1;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #146c9c; }
+        .login-btn { background: #28a745; }
+        .login-btn:hover { background: #1e7e34; }
+        .endpoints {
+            margin-top: 30px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .config-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Airtable MCP OAuth Server</h1>
+
+        <div id="status" class="status info">
+            Server is running and ready for OAuth authentication.
+        </div>
+
+        <div class="config-section">
+            <h3>📋 Configuration Required</h3>
+            <p>Make sure these environment variables are set:</p>
+            <ul>
+                <li><code>AIRTABLE_CLIENT_ID</code> - Your Airtable OAuth client ID</li>
+                <li><code>AIRTABLE_CLIENT_SECRET</code> - Your Airtable OAuth client secret</li>
+                <li><code>AIRTABLE_REDIRECT_URI</code> - OAuth redirect URI (optional, defaults to current host)</li>
+            </ul>
+        </div>
+
+        <div class="session-form">
+            <h3>🔑 Test OAuth Flow</h3>
+            <p>Generate a session ID and test the OAuth login:</p>
+            <input type="text" id="sessionId" placeholder="Enter session ID (or leave empty to generate)" />
+            <br>
+            <button onclick="generateSession()">Generate Session ID</button>
+            <button class="login-btn" onclick="startOAuth()">Start OAuth Login</button>
+        </div>
+
+        <div class="endpoints">
+            <h3>🔗 Available Endpoints</h3>
+            <div class="endpoint">GET /health - Health check</div>
+            <div class="endpoint">GET /oauth/login?session_id=xxx - Initiate OAuth</div>
+            <div class="endpoint">GET /oauth/callback - OAuth callback</div>
+            <div class="endpoint">GET /oauth/status/:sessionId - Check auth status</div>
+            <div class="endpoint">POST /oauth/logout/:sessionId - Logout session</div>
+            <div class="endpoint">POST /mcp/list_tools - List MCP tools</div>
+            <div class="endpoint">POST /mcp/call_tool - Execute MCP tool</div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <h3>📖 Setup Instructions</h3>
+            <ol style="text-align: left; display: inline-block;">
+                <li>Register your app in <a href="https://airtable.com/developers/web/api/oauth" target="_blank">Airtable OAuth</a></li>
+                <li>Set redirect URI to: <code>https://your-domain.com/oauth/callback</code></li>
+                <li>Set environment variables</li>
+                <li>Deploy and test OAuth flow</li>
+                <li>Use MCP endpoint in ChatGPT: <code>https://your-domain.com/mcp</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function generateSession() {
+            const sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+            document.getElementById('sessionId').value = sessionId;
+        }
+
+        function startOAuth() {
+            let sessionId = document.getElementById('sessionId').value.trim();
+            if (!sessionId) {
+                generateSession();
+                sessionId = document.getElementById('sessionId').value;
+            }
+
+            const loginUrl = `/oauth/login?session_id=${encodeURIComponent(sessionId)}`;
+            window.location.href = loginUrl;
+        }
+
+        // Check server status on load
+        fetch('/health')
+            .then(response => response.json())
+            .then(data => {
+                const statusDiv = document.getElementById('status');
+                if (data.status === 'healthy') {
+                    statusDiv.className = 'status success';
+                    statusDiv.textContent = `✅ Server healthy - ${data.server} v${data.version}`;
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ Server health check failed';
+                }
+            })
+            .catch(error => {
+                document.getElementById('status').className = 'status error';
+                document.getElementById('status').textContent = '❌ Cannot connect to server';
+            });
+    </script>
+</body>
+</html>

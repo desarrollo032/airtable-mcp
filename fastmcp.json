@@ -1,11 +1,11 @@
 {
   "$schema": "https://gofastmcp.com/public/schemas/fastmcp.json/v1.json",
   "name": "airtable-mcp",
-  "version": "1.0.0",
+  "version": "3.2.5",
   "source": {
     "type": "filesystem",
-    "path": "src/python/inspector_server.py",
-    "entrypoint": "mcp"
+    "path": "src/python/server.py",
+    "entrypoint": "server"
   },
   "transport": "http",
   "host": "0.0.0.0",
