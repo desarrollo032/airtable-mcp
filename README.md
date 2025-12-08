@@ -665,4 +665,4 @@ Licencia MIT - vea el archivo [LICENSE](./LICENSE) para más detalles
 
 ---
 
-**Versión**: 3.2.5 | **Estado**: 🔷 TypeScript Estable + 🤖 Agente IA | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **Última Actualización**: 7 de Diciembre de 2025
+**Versión**: 3.2.6 | **Estado**: ⚡ FastMCP Moderno + 🔷 TypeScript Estable + 🤖 Agente IA | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **Última Actualización**: 7 de Diciembre de 2025
