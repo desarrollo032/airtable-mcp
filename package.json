@@ -34,7 +34,7 @@
     "lint:fix": "eslint src/**/*.{js,ts} --fix",
     "format": "prettier --write \"src/**/*.{js,ts,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,ts,json,md}\"",
-    "dev": "nodemon --watch src --exec ts-node src/typescript/airtable-mcp-server.ts",
+    "dev": "python3 src/python/inspector_server.py",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build"
   },
@@ -64,7 +64,7 @@
   "author": "Rashid Azarang",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.19.1",
+    "@modelcontextprotocol/sdk": "^1.19.1",
     "@smithery/cli": "^1.0.0",
     "dotenv": "^16.0.0",
     "zod": "^3.23.8"

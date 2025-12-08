@@ -8,7 +8,20 @@ import requests
 from typing import Optional
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
+
+# Load configuration from config.json if it exists
+config_file = os.path.join(os.path.dirname(__file__), '..', '..', 'config.json')
+if os.path.exists(config_file):
+    try:
+        with open(config_file, 'r') as f:
+            config = json.load(f)
+            # Override environment variables with JSON config
+            for key, value in config.items():
+                os.environ[key] = str(value)
+    except Exception as e:
+        print(f"Warning: Could not load config.json: {e}")
 
 token = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
 base_id = os.getenv("AIRTABLE_BASE_ID")
