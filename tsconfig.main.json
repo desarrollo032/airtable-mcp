@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist/typescript",
+    "declarationDir": "./types/typescript"
+  },
+  "include": [
+    "src/typescript/airtable-mcp-server.ts",
+    "src/typescript/index.ts",
+    "src/typescript/errors.ts",
+    "src/typescript/prompt-templates.ts",
+    "src/typescript/tools-schemas.ts"
+  ],
+  "exclude": [
+    "src/typescript/app/**/*"
+  ],
+  "references": [
+    { "path": "./tsconfig.app.json" }
+  ]
+}

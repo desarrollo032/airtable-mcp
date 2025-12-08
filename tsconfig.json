@@ -3,7 +3,6 @@
     "target": "ES2020",
     "module": "CommonJS",
     "lib": ["ES2020"],
-    "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
@@ -26,19 +25,10 @@
     "noUncheckedIndexedAccess": true,
     "types": []
   },
-  "include": [
-    "src/typescript/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "types",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "src/javascript/**/*",
-    "src/python/**/*",
-    "src/typescript/prompt-templates.ts",
-    "src/typescript/tools-schemas.ts",
-    "src/typescript/**/*.d.ts"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.main.json" },
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.tools.json" }
   ]
 }

@@ -17,7 +17,7 @@
     "airtable-mcp-cli": "./bin/airtable-crud-cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build",
     "build:watch": "tsc --watch",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",

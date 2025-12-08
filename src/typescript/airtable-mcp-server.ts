@@ -67,20 +67,20 @@ export async function start(): Promise<void> {
 
   registerAllTools(server, context);
 
-  // Elegir transport según variable de entorno
-  const transportType = process.env.MCP_TRANSPORT || 'stdio';
-  let transport;
+  // Always start Stdio transport for local development
+  const stdioTransport = new StdioServerTransport();
+  await server.connect(stdioTransport);
+  logger.info('MCP server connected over Stdio');
 
+  // Optionally start HTTP transport for remote clients
+  const transportType = process.env.MCP_TRANSPORT;
   if (transportType === 'http') {
     const port = process.env.PORT ? Number(process.env.PORT) : 8000;
-    transport = new HttpServerTransport({ host: '0.0.0.0', port });
-    logger.info('Starting MCP server over HTTP', { port });
-  } else {
-    transport = new StdioServerTransport();
-    logger.info('Starting MCP server over Stdio');
+    const useSSE = process.env.MCP_USE_SSE === 'true';
+    const httpTransport = new HttpServerTransport({ host: '0.0.0.0', port, useSSE });
+    await server.connect(httpTransport);
+    logger.info('MCP server connected over HTTP', { port, useSSE });
   }
-
-  await server.connect(transport);
 
   logger.info('Airtable Brain MCP server ready', {
     version: config.version,

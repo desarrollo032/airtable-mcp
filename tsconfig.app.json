@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist/typescript/app",
+    "declarationDir": "./types/typescript/app"
+  },
+  "include": [
+    "src/typescript/app/**/*"
+  ],
+  "exclude": [
+    "src/typescript/app/tools/**/*"
+  ],
+  "references": [
+    { "path": "./tsconfig.tools.json" }
+  ]
+}
