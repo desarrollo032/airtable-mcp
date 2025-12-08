@@ -99,6 +99,7 @@ export async function start(): Promise<void> {
   process.on('SIGTERM', () => void shutdown('SIGTERM'));
 }
 
+// Run if executed directly
 if (typeof require !== 'undefined' && require.main === module) {
   start().catch((error) => {
     console.error('Failed to start Airtable Brain MCP server:', error);

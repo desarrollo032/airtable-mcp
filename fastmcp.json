@@ -8,6 +8,7 @@
     "entrypoint": "mcp"
   },
   "transport": "http",
-  "port": 8000
+  "host": "0.0.0.0",
+  "port": "$PORT",
+  "log_level": "INFO"
 }
-
