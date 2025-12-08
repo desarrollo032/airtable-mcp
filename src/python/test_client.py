@@ -15,19 +15,21 @@ TOKEN = os.environ.get('AIRTABLE_TOKEN', 'YOUR_AIRTABLE_TOKEN_HERE')
 BASE_ID = os.environ.get('AIRTABLE_BASE_ID', 'YOUR_BASE_ID_HERE')
 
 # Helper function to directly make Airtable API calls
-def api_call(endpoint, token=None):
+def api_call(endpoint, api_token=None):
     """Make a direct Airtable API call to test API access
-    
+
     Args:
         endpoint: The API endpoint path (will be validated)
-        token: The API token (will use global TOKEN if not provided)
+        api_token: The API token (will use global TOKEN if not provided)
     """
     import requests
     from urllib.parse import quote
-    
+
     # Use global token if not provided
-    if token is None:
+    if api_token is None:
         token = TOKEN
+    else:
+        token = api_token
     
     # Validate and sanitize the endpoint to prevent injection
     if not isinstance(endpoint, str):

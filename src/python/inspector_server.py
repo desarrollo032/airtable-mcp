@@ -23,22 +23,31 @@ if os.path.exists(config_file):
     except Exception as e:
         print(f"Warning: Could not load config.json: {e}")
 
-token = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
-base_id = os.getenv("AIRTABLE_BASE_ID")
-port = int(os.getenv("PORT", 8000))  # Railway asigna automáticamente PORT
+# Consistent variable naming
+AIRTABLE_PERSONAL_ACCESS_TOKEN = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
+AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+PORT = int(os.getenv("PORT", 8000))  # Railway asigna automáticamente PORT
 
 # Inicializar servidor FastMCP 2.x
 from fastmcp import FastMCP
 
 mcp = FastMCP("Airtable Tools")   # ESTE ES EL ÚNICO SERVIDOR VÁLIDO
 
+# Server state - use a class for better encapsulation
+class ServerState:
+    def __init__(self):
+        self.base_id = AIRTABLE_BASE_ID or ""
+        self.token = AIRTABLE_PERSONAL_ACCESS_TOKEN or ""
+
+server_state = ServerState()
+
 # Helper function for Airtable API
 async def api_call(endpoint, method="GET", data=None, params=None):
-    if not token:
+    if not server_state.token:
         return {"error": "No Airtable API token provided."}
 
     headers = {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {server_state.token}",
         "Content-Type": "application/json"
     }
 
@@ -48,8 +57,10 @@ async def api_call(endpoint, method="GET", data=None, params=None):
         response = requests.request(method, url, headers=headers, params=params, json=data, timeout=30)
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": f"API request failed: {str(e)}"}
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"Unexpected error: {str(e)}"}
 
 # --------------------------------------
 # MCP TOOLS
@@ -66,7 +77,7 @@ async def list_bases() -> str:
 
 @mcp.tool()
 async def list_tables(base_id_param: Optional[str] = None) -> str:
-    current_base = base_id_param or base_id
+    current_base = base_id_param or server_state.base_id
     if not current_base:
         return "No base ID provided."
     result = await api_call(f"meta/bases/{current_base}/tables")
@@ -78,12 +89,12 @@ async def list_tables(base_id_param: Optional[str] = None) -> str:
 
 @mcp.tool()
 async def list_records(table_name: str, max_records: Optional[int] = 100, filter_formula: Optional[str] = None) -> str:
-    if not base_id:
+    if not server_state.base_id:
         return "No base ID set."
     params = {"maxRecords": max_records}
     if filter_formula:
         params["filterByFormula"] = filter_formula
-    result = await api_call(f"{base_id}/{table_name}", params=params)
+    result = await api_call(f"{server_state.base_id}/{table_name}", params=params)
     if "error" in result:
         return f"Error: {result['error']}"
     records = result.get("records", [])
@@ -92,7 +103,7 @@ async def list_records(table_name: str, max_records: Optional[int] = 100, filter
 
 @mcp.tool()
 async def create_records(table_name: str, records_json: str) -> str:
-    if not base_id:
+    if not server_state.base_id:
         return "No base ID set."
     try:
         records_data = json.loads(records_json)
@@ -100,7 +111,7 @@ async def create_records(table_name: str, records_json: str) -> str:
             records_data = [records_data]
         records = [{"fields": record} for record in records_data]
         data = {"records": records}
-        result = await api_call(f"{base_id}/{table_name}", method="POST", data=data)
+        result = await api_call(f"{server_state.base_id}/{table_name}", method="POST", data=data)
         if "error" in result:
             return f"Error: {result['error']}"
         created_records = result.get("records", [])
@@ -140,17 +151,20 @@ async def update_records(table_name: str, records_json: str) -> str:
 
 @mcp.tool()
 async def set_base_id(base_id_param: str) -> str:
-    global base_id
-    base_id = base_id_param
-    return f"Base ID set to: {base_id}"
+    server_state.base_id = base_id_param
+    return f"Base ID set to: {base_id_param}"
 
 
 # --------------------------------------
 # RUN FASTMCP SERVER (HTTP para Railway)
 # --------------------------------------
 if __name__ == "__main__":
+    if not server_state.token:
+        print("Error: AIRTABLE_PERSONAL_ACCESS_TOKEN environment variable not set")
+        sys.exit(1)
+
     mcp.run(
         transport="http",
         host="0.0.0.0",
-        port=port
+        port=PORT
     )
