@@ -6,6 +6,11 @@
       "type": "python",
       "module": "src.python.inspector_server",
       "callable": "app"
-    }
+    },
+    "host": "0.0.0.0",
+    "port": 8000,
+    "reload": false,         
+    "workers": 1,             
+    "env": {}                 
   }
 }
