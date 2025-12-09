@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Autenticación Exitosa</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .success-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        .checkmark {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .platform-logo {
+            margin-top: 30px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <div class="checkmark">✅</div>
+        <h1>¡Autenticación Exitosa!</h1>
+        <p>Tu cuenta de Airtable ha sido conectada correctamente.</p>
+
+        <div style="margin-top: 30px;">
+            {% if context.platform == 'chatgpt' %}
+            <div class="platform-logo">🤖 ChatGPT</div>
+            <p>Puedes volver a ChatGPT y usar las herramientas de Airtable.</p>
+            {% else %}
+            <div class="platform-logo">⚡ Mistral AI</div>
+            <p>Puedes volver a Mistral AI y usar las herramientas de Airtable.</p>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 30px;">
+            <p>Esta sesión es válida por 30 días.</p>
+            <p>Puedes cerrar esta ventana.</p>
+        </div>
+    </div>
+</body>
+</html>

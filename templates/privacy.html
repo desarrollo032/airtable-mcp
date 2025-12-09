@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Política de Privacidad - Airtable MCP Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .highlight {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Política de Privacidad</h1>
+
+    <div class="highlight">
+        <strong>Resumen:</strong> Este servidor MCP no almacena tus credenciales de Airtable de forma permanente.
+        Solo almacenamos tokens de acceso temporales para la duración de tu sesión.
+    </div>
+
+    <h2>1. Información que Recopilamos</h2>
+    <p>Cuando utilizas este servidor MCP para conectarte con Airtable, recopilamos:</p>
+    <ul>
+        <li><strong>Tokens de OAuth:</strong> Tokens temporales de acceso proporcionados por Airtable</li>
+        <li><strong>Identificadores de Sesión:</strong> IDs únicos generados para cada sesión de usuario</li>
+        <li><strong>Metadatos de Uso:</strong> Información básica sobre las operaciones realizadas (sin datos sensibles)</li>
+    </ul>
+
+    <h2>2. Cómo Utilizamos la Información</h2>
+    <p>La información recopilada se utiliza únicamente para:</p>
+    <ul>
+        <li>Autenticar y autorizar el acceso a tu cuenta de Airtable</li>
+        <li>Facilitar la comunicación entre el asistente IA y Airtable</li>
+        <li>Mantener la seguridad de las sesiones</li>
+    </ul>
+
+    <h2>3. Almacenamiento de Datos</h2>
+    <p><strong>No almacenamos credenciales permanentes.</strong> Los tokens de acceso:</p>
+    <ul>
+        <li>Son encriptados usando AES-128 antes del almacenamiento</li>
+        <li>Tienen una duración limitada (según la política de Airtable)</li>
+        <li>Son eliminados automáticamente al expirar</li>
+        <li>En desarrollo: se almacenan en memoria local</li>
+        <li>En producción: se almacenan en Redis/PostgreSQL encriptados</li>
+    </ul>
+
+    <h2>4. Compartir Información</h2>
+    <p><strong>No compartimos tus datos con terceros.</strong></p>
+    <ul>
+        <li>Los datos permanecen exclusivamente en tu servidor/control</li>
+        <li>No se transmiten a servicios externos excepto Airtable</li>
+        <li>No se utilizan para análisis o marketing</li>
+    </ul>
+
+    <h2>5. Seguridad</h2>
+    <p>Implementamos medidas de seguridad estándar:</p>
+    <ul>
+        <li>Encriptación AES-128 para tokens sensibles</li>
+        <li>Validación CSRF en flujos OAuth</li>
+        <li>Limpieza automática de tokens expirados</li>
+        <li>Validación de estado OAuth con expiración</li>
+    </ul>
+
+    <h2>6. Tus Derechos</h2>
+    <p>Tienes derecho a:</p>
+    <ul>
+        <li>Acceder a la información que tenemos sobre ti</li>
+        <li>Solicitar la eliminación de tus datos</li>
+        <li>Revocar el acceso en cualquier momento</li>
+        <li>Contactarnos para cualquier pregunta sobre privacidad</li>
+    </ul>
+
+    <h2>7. Cambios a Esta Política</h2>
+    <p>Esta política puede actualizarse periódicamente. Los cambios significativos serán notificados a través del repositorio del proyecto.</p>
+
+    <h2>8. Contacto</h2>
+    <p>Para preguntas sobre esta política de privacidad, contacta al mantenedor del proyecto a través del repositorio GitHub.</p>
+
+    <p><em>Última actualización: Diciembre 2024</em></p>
+</body>
+</html>

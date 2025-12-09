@@ -14,6 +14,9 @@ from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional, AsyncIterator, Callable
 from dotenv import load_dotenv
 
+# Import TOON utilities
+from .toon_utils import parse_data, stringify_data, detect_format
+
 print(f"Python version: {sys.version}")
 print(f"Python executable: {sys.executable}")
 print(f"Python path: {sys.path}")
@@ -246,84 +249,118 @@ async def create_records(table_name: str, records_json: str) -> str:
 
 
 @mcp.tool()
-async def update_records(table_name: str, records_json: str) -> str:
-    """Update records in a table from JSON string"""
+async def update_records(table_name: str, records_data: str) -> str:
+    """Update records in a table from JSON or TOON string"""
     if not server_state["token"]:
         return "Please provide an Airtable API token to update records."
-    
+
     base = server_state["base_id"]
-    
+
     if not base:
         return "Error: No base ID set. Please set a base ID."
-    
+
     try:
-        records_data = json.loads(records_json)
-        
+        # Auto-detect and parse JSON or TOON format
+        parsed_data = parse_data(records_data)
+
+        # Handle different TOON structures
+        if isinstance(parsed_data, dict):
+            # If it's a dict with multiple objects, extract the records
+            if 'records' in parsed_data:
+                records_data = parsed_data['records']
+                if not isinstance(records_data, list):
+                    records_data = [records_data]
+            else:
+                # Single record or list of records
+                records_data = list(parsed_data.values())
+                if not isinstance(records_data, list):
+                    records_data = [records_data]
+        elif isinstance(parsed_data, list):
+            records_data = parsed_data
+        else:
+            records_data = [parsed_data]
+
         # Format the records for Airtable API
-        if not isinstance(records_data, list):
-            records_data = [records_data]
-        
         records = []
         for record in records_data:
             if "id" not in record:
                 return "Error: Each record must have an 'id' field."
-            
+
             rec_id = record.pop("id")
             fields = record.get("fields", record)  # Support both {id, fields} format and direct fields
             records.append({"id": rec_id, "fields": fields})
-        
+
         data = {"records": records}
         result = await api_call(f"{base}/{table_name}", method="PATCH", data=data)
-        
+
         if "error" in result:
             return f"Error: {result['error']}"
-        
+
         updated_records = result.get("records", [])
         return f"Successfully updated {len(updated_records)} records."
-        
-    except json.JSONDecodeError:
-        return "Error: Invalid JSON format in records_json parameter."
+
     except Exception as e:
-        return f"Error updating records: {str(e)}"
+        return f"Error updating records: {str(e)}. Please provide valid JSON or TOON format."
 
 
 @mcp.tool()
 async def delete_records(table_name: str, record_ids: str) -> str:
-    """Delete records from a table by their IDs (comma-separated or JSON array)"""
+    """Delete records from a table by their IDs (comma-separated, JSON array, or TOON)"""
     if not server_state["token"]:
         return "Please provide an Airtable API token to delete records."
-    
+
     base = server_state["base_id"]
-    
+
     if not base:
         return "Error: No base ID set. Please set a base ID."
-    
+
     try:
-        # Handle both comma-separated and JSON array formats
-        if record_ids.startswith("["):
+        # Auto-detect and parse format
+        format_type = detect_format(record_ids)
+
+        if format_type == 'toon':
+            parsed_data = parse_data(record_ids)
+            # Extract IDs from TOON format
+            if isinstance(parsed_data, dict):
+                if 'ids' in parsed_data:
+                    ids_list = parsed_data['ids']
+                    if isinstance(ids_list, str):
+                        ids_list = [id.strip() for id in ids_list.split(',')]
+                    elif not isinstance(ids_list, list):
+                        ids_list = [str(ids_list)]
+                else:
+                    # Try to extract from any object
+                    ids_list = []
+                    for obj_data in parsed_data.values():
+                        if isinstance(obj_data, dict) and 'id' in obj_data:
+                            ids_list.append(str(obj_data['id']))
+            else:
+                ids_list = [str(parsed_data)]
+        elif record_ids.startswith("["):
             ids_list = json.loads(record_ids)
         else:
             ids_list = [rid.strip() for rid in record_ids.split(",")]
-        
+
+        # Ensure all IDs are strings
+        ids_list = [str(rid) for rid in ids_list]
+
         # Delete records in batches of 10 (Airtable API limit)
         deleted_count = 0
         for i in range(0, len(ids_list), 10):
             batch = ids_list[i:i+10]
             params = {"records[]": batch}
-            
+
             result = await api_call(f"{base}/{table_name}", method="DELETE", params=params)
-            
+
             if "error" in result:
                 return f"Error deleting records: {result['error']}"
-            
+
             deleted_count += len(result.get("records", []))
-        
+
         return f"Successfully deleted {deleted_count} records."
-        
-    except json.JSONDecodeError:
-        return "Error: Invalid format for record_ids. Use comma-separated IDs or JSON array."
+
     except Exception as e:
-        return f"Error deleting records: {str(e)}"
+        return f"Error deleting records: {str(e)}. Please provide valid format (comma-separated, JSON array, or TOON)."
 
 
 @mcp.tool()

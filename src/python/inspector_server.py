@@ -8,6 +8,9 @@ import requests
 from typing import Optional
 from dotenv import load_dotenv
 
+# Import TOON utilities
+from airtable_mcp.src.toon_utils import parse_data
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -123,13 +126,30 @@ async def create_records(table_name: str, records_json: str) -> str:
 
 
 @mcp.tool()
-async def update_records(table_name: str, records_json: str) -> str:
-    if not base_id:
+async def update_records(table_name: str, records_data: str) -> str:
+    if not server_state.base_id:
         return "No base ID set."
     try:
-        records_data = json.loads(records_json)
-        if not isinstance(records_data, list):
-            records_data = [records_data]
+        # Auto-detect and parse JSON or TOON format
+        parsed_data = parse_data(records_data)
+
+        # Handle different TOON structures
+        if isinstance(parsed_data, dict):
+            # If it's a dict with multiple objects, extract the records
+            if 'records' in parsed_data:
+                records_data = parsed_data['records']
+                if not isinstance(records_data, list):
+                    records_data = [records_data]
+            else:
+                # Single record or list of records
+                records_data = list(parsed_data.values())
+                if not isinstance(records_data, list):
+                    records_data = [records_data]
+        elif isinstance(parsed_data, list):
+            records_data = parsed_data
+        else:
+            records_data = [parsed_data]
+
         records = []
         for record in records_data:
             if "id" not in record:
@@ -138,15 +158,13 @@ async def update_records(table_name: str, records_json: str) -> str:
             fields = record.get("fields", record)
             records.append({"id": rec_id, "fields": fields})
         data = {"records": records}
-        result = await api_call(f"{base_id}/{table_name}", method="PATCH", data=data)
+        result = await api_call(f"{server_state.base_id}/{table_name}", method="PATCH", data=data)
         if "error" in result:
             return f"Error: {result['error']}"
         updated_records = result.get("records", [])
         return f"Successfully updated {len(updated_records)} records."
-    except json.JSONDecodeError:
-        return "Error: Invalid JSON format in records_json parameter."
     except Exception as e:
-        return f"Error updating records: {str(e)}"
+        return f"Error updating records: {str(e)}. Please provide valid JSON or TOON format."
 
 
 @mcp.tool()

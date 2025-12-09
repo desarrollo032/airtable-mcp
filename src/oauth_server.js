@@ -271,217 +271,320 @@ app.post('/oauth/logout/:sessionId', (req, res) => {
 });
 
 // ================================
-// 6. MCP INTEGRATION ENDPOINTS
+// 6. MCP PROTOCOL ENDPOINTS (ChatGPT Compatible)
 // ================================
 
-// MCP-compatible endpoint for listing tools
-app.post('/mcp/list_tools', (req, res) => {
-  const { session_id } = req.body || {};
+// SSE endpoint for MCP protocol
+app.get('/mcp/sse', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Cache-Control',
+  });
 
-  const tools = [
-    {
-      name: 'list_bases',
-      description: 'List all accessible Airtable bases',
-      inputSchema: {
-        type: 'object',
-        properties: {
-          session_id: { type: 'string', description: 'User session ID' }
-        },
-        required: ['session_id']
-      }
-    },
-    {
-      name: 'list_tables',
-      description: 'List tables in a specific base',
-      inputSchema: {
-        type: 'object',
-        properties: {
-          session_id: { type: 'string', description: 'User session ID' },
-          base_id: { type: 'string', description: 'Airtable base ID' }
-        },
-        required: ['session_id', 'base_id']
-      }
-    },
-    {
-      name: 'list_records',
-      description: 'List records from a table',
-      inputSchema: {
-        type: 'object',
-        properties: {
-          session_id: { type: 'string', description: 'User session ID' },
-          base_id: { type: 'string', description: 'Airtable base ID' },
-          table_name: { type: 'string', description: 'Table name' },
-          max_records: { type: 'number', description: 'Maximum records to return', default: 100 }
-        },
-        required: ['session_id', 'base_id', 'table_name']
-      }
-    },
-    {
-      name: 'create_records',
-      description: 'Create records in a table',
-      inputSchema: {
-        type: 'object',
-        properties: {
-          session_id: { type: 'string', description: 'User session ID' },
-          base_id: { type: 'string', description: 'Airtable base ID' },
-          table_name: { type: 'string', description: 'Table name' },
-          records: {
-            type: 'array',
-            description: 'Array of record objects with fields',
-            items: { type: 'object' }
-          }
-        },
-        required: ['session_id', 'base_id', 'table_name', 'records']
-      }
-    },
-    {
-      name: 'update_records',
-      description: 'Update records in a table',
-      inputSchema: {
-        type: 'object',
-        properties: {
-          session_id: { type: 'string', description: 'User session ID' },
-          base_id: { type: 'string', description: 'Airtable base ID' },
-          table_name: { type: 'string', description: 'Table name' },
-          records: {
-            type: 'array',
-            description: 'Array of record objects with id and fields',
-            items: {
-              type: 'object',
-              properties: {
-                id: { type: 'string', description: 'Record ID' },
-                fields: { type: 'object', description: 'Updated fields' }
-              },
-              required: ['id', 'fields']
-            }
-          }
-        },
-        required: ['session_id', 'base_id', 'table_name', 'records']
-      }
-    }
-  ];
+  // Send initial connection event
+  res.write('event: open\ndata: {}\n\n');
 
-  res.json({ tools });
+  // Keep connection alive
+  const keepAlive = setInterval(() => {
+    res.write(': keepalive\n\n');
+  }, 30000);
+
+  req.on('close', () => {
+    clearInterval(keepAlive);
+  });
 });
 
-// MCP-compatible endpoint for calling tools
-app.post('/mcp/call_tool', async (req, res) => {
-  const { name, arguments: args } = req.body;
+// Main MCP endpoint - handles all MCP protocol messages
+app.post('/mcp', async (req, res) => {
+  const { jsonrpc, id, method, params } = req.body;
 
-  if (!args || !args.session_id) {
+  if (!jsonrpc || jsonrpc !== '2.0') {
     return res.status(400).json({
-      error: {
-        type: 'invalid_request',
-        message: 'session_id is required'
-      }
-    });
-  }
-
-  const sessionData = tokenDB[args.session_id];
-
-  if (!sessionData || !sessionData.access_token) {
-    return res.json({
-      content: [{
-        type: 'text',
-        text: `Authentication required. Please visit: ${process.env.BASE_URL || `http://localhost:${PORT}`}/oauth/login?session_id=${args.session_id}`
-      }]
-    });
-  }
-
-  // Check if token is expired
-  if (sessionData.expires_at && Date.now() > sessionData.expires_at) {
-    return res.json({
-      content: [{
-        type: 'text',
-        text: `Session expired. Please re-authenticate: ${process.env.BASE_URL || `http://localhost:${PORT}`}/oauth/login?session_id=${args.session_id}`
-      }]
+      jsonrpc: '2.0',
+      error: { code: -32600, message: 'Invalid Request' },
+      id
     });
   }
 
   try {
-    let result;
-
-    switch (name) {
-      case 'list_bases':
-        result = await callAirtableAPI(sessionData.access_token, 'meta/bases');
-        if (result.error) throw new Error(result.error);
-        const bases = result.bases || [];
+    switch (method) {
+      case 'initialize':
         return res.json({
-          content: [{
-            type: 'text',
-            text: bases.map((b, i) => `${i + 1}. ${b.name} (ID: ${b.id})`).join('\n') || 'No bases found.'
-          }]
-        });
-
-      case 'list_tables':
-        if (!args.base_id) throw new Error('base_id is required');
-        result = await callAirtableAPI(sessionData.access_token, `meta/bases/${args.base_id}/tables`);
-        if (result.error) throw new Error(result.error);
-        const tables = result.tables || [];
-        return res.json({
-          content: [{
-            type: 'text',
-            text: tables.map((t, i) => `${i + 1}. ${t.name} (ID: ${t.id})`).join('\n') || 'No tables found.'
-          }]
+          jsonrpc: '2.0',
+          result: {
+            protocolVersion: '2024-11-05',
+            capabilities: {
+              tools: {}
+            },
+            serverInfo: {
+              name: 'airtable-mcp-oauth',
+              version: '1.0.0'
+            }
+          },
+          id
         });
 
-      case 'list_records':
-        if (!args.base_id || !args.table_name) throw new Error('base_id and table_name are required');
-        const maxRecords = args.max_records || 100;
-        result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, {
-          maxRecords
-        });
-        if (result.error) throw new Error(result.error);
-        const records = result.records || [];
+      case 'tools/list':
+        const tools = [
+          {
+            name: 'list_bases',
+            description: 'List all accessible Airtable bases',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                session_id: { type: 'string', description: 'User session ID' }
+              },
+              required: ['session_id']
+            }
+          },
+          {
+            name: 'list_tables',
+            description: 'List tables in a specific base',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                session_id: { type: 'string', description: 'User session ID' },
+                base_id: { type: 'string', description: 'Airtable base ID' }
+              },
+              required: ['session_id', 'base_id']
+            }
+          },
+          {
+            name: 'list_records',
+            description: 'List records from a table',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                session_id: { type: 'string', description: 'User session ID' },
+                base_id: { type: 'string', description: 'Airtable base ID' },
+                table_name: { type: 'string', description: 'Table name' },
+                max_records: { type: 'number', description: 'Maximum records to return', default: 100 }
+              },
+              required: ['session_id', 'base_id', 'table_name']
+            }
+          },
+          {
+            name: 'create_records',
+            description: 'Create records in a table',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                session_id: { type: 'string', description: 'User session ID' },
+                base_id: { type: 'string', description: 'Airtable base ID' },
+                table_name: { type: 'string', description: 'Table name' },
+                records: {
+                  type: 'array',
+                  description: 'Array of record objects with fields',
+                  items: { type: 'object' }
+                }
+              },
+              required: ['session_id', 'base_id', 'table_name', 'records']
+            }
+          },
+          {
+            name: 'update_records',
+            description: 'Update records in a table',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                session_id: { type: 'string', description: 'User session ID' },
+                base_id: { type: 'string', description: 'Airtable base ID' },
+                table_name: { type: 'string', description: 'Table name' },
+                records: {
+                  type: 'array',
+                  description: 'Array of record objects with id and fields',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string', description: 'Record ID' },
+                      fields: { type: 'object', description: 'Updated fields' }
+                    },
+                    required: ['id', 'fields']
+                  }
+                }
+              },
+              required: ['session_id', 'base_id', 'table_name', 'records']
+            }
+          }
+        ];
+
         return res.json({
-          content: [{
-            type: 'text',
-            text: records.map((r, i) => `${i + 1}. ${r.id} - ${JSON.stringify(r.fields)}`).join('\n') || 'No records found.'
-          }]
+          jsonrpc: '2.0',
+          result: { tools },
+          id
         });
 
-      case 'create_records':
-        if (!args.base_id || !args.table_name || !args.records) throw new Error('base_id, table_name, and records are required');
-        result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, null, {
-          method: 'POST',
-          body: JSON.stringify({ records: args.records.map(fields => ({ fields })) })
-        });
-        if (result.error) throw new Error(result.error);
-        return res.json({
-          content: [{
-            type: 'text',
-            text: `Successfully created ${result.records?.length || 0} records.`
-          }]
-        });
+      case 'tools/call':
+        const { name, arguments: args } = params;
 
-      case 'update_records':
-        if (!args.base_id || !args.table_name || !args.records) throw new Error('base_id, table_name, and records are required');
-        result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, null, {
-          method: 'PATCH',
-          body: JSON.stringify({ records: args.records })
-        });
-        if (result.error) throw new Error(result.error);
-        return res.json({
-          content: [{
-            type: 'text',
-            text: `Successfully updated ${result.records?.length || 0} records.`
-          }]
-        });
+        if (!args || !args.session_id) {
+          return res.json({
+            jsonrpc: '2.0',
+            error: {
+              code: -32602,
+              message: 'session_id is required'
+            },
+            id
+          });
+        }
+
+        const sessionData = tokenDB[args.session_id];
+
+        if (!sessionData || !sessionData.access_token) {
+          return res.json({
+            jsonrpc: '2.0',
+            result: {
+              content: [{
+                type: 'text',
+                text: `Authentication required. Please visit: ${process.env.BASE_URL || `http://localhost:${PORT}`}/oauth/login?session_id=${args.session_id}`
+              }]
+            },
+            id
+          });
+        }
+
+        // Check if token is expired
+        if (sessionData.expires_at && Date.now() > sessionData.expires_at) {
+          return res.json({
+            jsonrpc: '2.0',
+            result: {
+              content: [{
+                type: 'text',
+                text: `Session expired. Please re-authenticate: ${process.env.BASE_URL || `http://localhost:${PORT}`}/oauth/login?session_id=${args.session_id}`
+              }]
+            },
+            id
+          });
+        }
+
+        try {
+          let result;
+
+          switch (name) {
+            case 'list_bases':
+              result = await callAirtableAPI(sessionData.access_token, 'meta/bases');
+              if (result.error) throw new Error(result.error);
+              const bases = result.bases || [];
+              return res.json({
+                jsonrpc: '2.0',
+                result: {
+                  content: [{
+                    type: 'text',
+                    text: bases.map((b, i) => `${i + 1}. ${b.name} (ID: ${b.id})`).join('\n') || 'No bases found.'
+                  }]
+                },
+                id
+              });
+
+            case 'list_tables':
+              if (!args.base_id) throw new Error('base_id is required');
+              result = await callAirtableAPI(sessionData.access_token, `meta/bases/${args.base_id}/tables`);
+              if (result.error) throw new Error(result.error);
+              const tables = result.tables || [];
+              return res.json({
+                jsonrpc: '2.0',
+                result: {
+                  content: [{
+                    type: 'text',
+                    text: tables.map((t, i) => `${i + 1}. ${t.name} (ID: ${t.id})`).join('\n') || 'No tables found.'
+                  }]
+                },
+                id
+              });
+
+            case 'list_records':
+              if (!args.base_id || !args.table_name) throw new Error('base_id and table_name are required');
+              const maxRecords = args.max_records || 100;
+              result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, {
+                maxRecords
+              });
+              if (result.error) throw new Error(result.error);
+              const records = result.records || [];
+              return res.json({
+                jsonrpc: '2.0',
+                result: {
+                  content: [{
+                    type: 'text',
+                    text: records.map((r, i) => `${i + 1}. ${r.id} - ${JSON.stringify(r.fields)}`).join('\n') || 'No records found.'
+                  }]
+                },
+                id
+              });
+
+            case 'create_records':
+              if (!args.base_id || !args.table_name || !args.records) throw new Error('base_id, table_name, and records are required');
+              result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, null, {
+                method: 'POST',
+                body: JSON.stringify({ records: args.records.map(fields => ({ fields })) })
+              });
+              if (result.error) throw new Error(result.error);
+              return res.json({
+                jsonrpc: '2.0',
+                result: {
+                  content: [{
+                    type: 'text',
+                    text: `Successfully created ${result.records?.length || 0} records.`
+                  }]
+                },
+                id
+              });
+
+            case 'update_records':
+              if (!args.base_id || !args.table_name || !args.records) throw new Error('base_id, table_name, and records are required');
+              result = await callAirtableAPI(sessionData.access_token, `${args.base_id}/${args.table_name}`, null, {
+                method: 'PATCH',
+                body: JSON.stringify({ records: args.records })
+              });
+              if (result.error) throw new Error(result.error);
+              return res.json({
+                jsonrpc: '2.0',
+                result: {
+                  content: [{
+                    type: 'text',
+                    text: `Successfully updated ${result.records?.length || 0} records.`
+                  }]
+                },
+                id
+              });
+
+            default:
+              throw new Error(`Unknown tool: ${name}`);
+          }
+
+        } catch (error) {
+          console.error(`Tool execution error (${name}):`, error);
+          return res.json({
+            jsonrpc: '2.0',
+            error: {
+              code: -32603,
+              message: error.message
+            },
+            id
+          });
+        }
 
       default:
-        throw new Error(`Unknown tool: ${name}`);
+        return res.status(400).json({
+          jsonrpc: '2.0',
+          error: { code: -32601, message: 'Method not found' },
+          id
+        });
     }
 
   } catch (error) {
-    console.error(`Tool execution error (${name}):`, error);
-    res.json({
-      content: [{
-        type: 'text',
-        text: `Error: ${error.message}`
-      }]
+    console.error('MCP protocol error:', error);
+    return res.status(500).json({
+      jsonrpc: '2.0',
+      error: { code: -32603, message: 'Internal error' },
+      id
     });
   }
 });
+
+
 
 // ================================
 // 7. HELPER FUNCTIONS

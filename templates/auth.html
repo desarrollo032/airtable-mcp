@@ -1,0 +1,61 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Airtable MCP - Autenticación</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #007AFF;
+        }
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .error {
+            color: #f44336;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-box">
+        <div class="logo">🔗 Airtable MCP</div>
+
+        {% if context.get('error') %}
+        <div class="error">{{ context.error }}</div>
+        {% endif %}
+
+        <h2>Conectar con Airtable</h2>
+        <p>Autentícate con tu cuenta de Airtable para conectar tus bases de datos.</p>
+
+        <form action="/oauth/authorize" method="get">
+            <input type="hidden" name="platform" value="chatgpt">
+            <button type="submit" class="button">Conectar con Airtable</button>
+        </form>
+    </div>
+</body>
+</html>
