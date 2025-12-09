@@ -1,72 +1,130 @@
 #!/usr/bin/env python3
 """
-Airtable MCP Inspector Server - FastMCP 2.x
+Airtable MCP Inspector Server - FastMCP 2.x (Corrected)
+- Async HTTP client (httpx) instead of requests to avoid blocking the event loop.
+- Robust imports, safe URL building, clear error handling.
+- Usage:
+    python src/python/inspector_server.py
 """
+
 import os
+import sys
 import json
-import requests
-from typing import Optional
+import asyncio
+import logging
+from typing import Optional, Any, List, Dict
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
-# Import TOON utilities
-from airtable_mcp.src.toon_utils import parse_data
-
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Load configuration from config.json if it exists
-config_file = os.path.join(os.path.dirname(__file__), '..', '..', 'config.json')
+# Ensure repo root is on sys.path so local imports work (adjust if your layout differs)
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+
+# Setup logging
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
+logger = logging.getLogger("airtable-mcp-inspector")
+
+# Async HTTP client
+try:
+    import httpx
+except Exception:
+    logger.exception("httpx not installed. Install with: pip install httpx")
+    raise
+
+# FastMCP import (assumes fastmcp provided the named class/functionality)
+try:
+    from fastmcp import FastMCP
+except Exception:
+    logger.exception("fastmcp not installed or import failed. Install with: pip install fastmcp")
+    raise
+
+# Try to import parse_data from project; provide fallback stub if missing
+try:
+    from auth.src.toon_utils import parse_data  # preferred
+except Exception:
+    try:
+        from src.toon_utils import parse_data  # fallback
+    except Exception:
+        logger.warning("toon_utils.parse_data not found — using identity passthrough.")
+        def parse_data(x: Any) -> Any:
+            # trivial parser fallback: try JSON then return original
+            try:
+                return json.loads(x) if isinstance(x, str) else x
+            except Exception:
+                return x
+
+# Load config.json (optional) and override env vars (safe)
+config_file = os.path.join(os.path.dirname(__file__), "..", "..", "config.json")
 if os.path.exists(config_file):
     try:
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-            # Override environment variables with JSON config
-            for key, value in config.items():
-                os.environ[key] = str(value)
+        with open(config_file, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+        for k, v in cfg.items():
+            # don't clobber an already set environment variable
+            if os.environ.get(k) is None:
+                os.environ[k] = str(v)
     except Exception as e:
-        print(f"Warning: Could not load config.json: {e}")
+        logger.warning("Could not load config.json: %s", e)
 
-# Consistent variable naming
-AIRTABLE_PERSONAL_ACCESS_TOKEN = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
-AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
-PORT = int(os.getenv("PORT", 8000))  # Railway asigna automáticamente PORT
+# Environment variables and defaults
+AIRTABLE_PERSONAL_ACCESS_TOKEN = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN") or os.getenv("AIRTABLE_PAT")
+AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID", "")
+PORT = int(os.getenv("PORT", "8000"))
 
-# Inicializar servidor FastMCP 2.x
-from fastmcp import FastMCP
+# Initialize FastMCP server
+mcp = FastMCP("Airtable Tools")
 
-mcp = FastMCP("Airtable Tools")   # ESTE ES EL ÚNICO SERVIDOR VÁLIDO
-
-# Server state - use a class for better encapsulation
+# Encapsulated server state
 class ServerState:
-    def __init__(self):
-        self.base_id = AIRTABLE_BASE_ID or ""
-        self.token = AIRTABLE_PERSONAL_ACCESS_TOKEN or ""
+    def __init__(self, base_id: str = "", token: str = ""):
+        self.base_id = base_id
+        self.token = token
 
-server_state = ServerState()
+server_state = ServerState(base_id=AIRTABLE_BASE_ID, token=AIRTABLE_PERSONAL_ACCESS_TOKEN or "")
 
-# Helper function for Airtable API
-async def api_call(endpoint, method="GET", data=None, params=None):
+# Helper: build airtable URL for given endpoint (endpoint relative to v0/)
+def _airtable_url(path: str) -> str:
+    # path examples: "meta/bases" or "<base_id>/<table_name>"
+    path = path.lstrip("/")
+    return f"https://api.airtable.com/v0/{path}"
+
+# Async API call using httpx.AsyncClient
+async def api_call(endpoint: str, method: str = "GET", data: Optional[Any] = None, params: Optional[dict] = None, timeout: int = 30) -> Dict[str, Any]:
     if not server_state.token:
         return {"error": "No Airtable API token provided."}
 
     headers = {
         "Authorization": f"Bearer {server_state.token}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
-    url = f"https://api.airtable.com/v0/{endpoint}"
+    url = _airtable_url(endpoint)
 
-    try:
-        response = requests.request(method, url, headers=headers, params=params, json=data, timeout=30)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        return {"error": f"API request failed: {str(e)}"}
-    except Exception as e:
-        return {"error": f"Unexpected error: {str(e)}"}
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        try:
+            response = await client.request(method.upper(), url, headers=headers, json=data, params=params)
+            response.raise_for_status()
+            # Some endpoints might return plain text; try json safe
+            try:
+                return response.json()
+            except Exception:
+                return {"raw": response.text}
+        except httpx.HTTPStatusError as e:
+            # Try to decode JSON error message if present
+            try:
+                body = e.response.json()
+            except Exception:
+                body = {"status_code": e.response.status_code, "text": e.response.text}
+            return {"error": f"API status error: {body}"}
+        except Exception as e:
+            return {"error": f"API request failed: {str(e)}"}
 
 # --------------------------------------
-# MCP TOOLS
+# MCP TOOLS (async)
 # --------------------------------------
 
 @mcp.tool()
@@ -75,114 +133,141 @@ async def list_bases() -> str:
     if "error" in result:
         return f"Error: {result['error']}"
     bases = result.get("bases", [])
-    return "\n".join([f"{i+1}. {b['name']} (ID: {b['id']})" for i, b in enumerate(bases)]) or "No bases found."
-
+    if not bases:
+        return "No bases found."
+    out = []
+    for i, b in enumerate(bases, start=1):
+        name = b.get("name", "<unknown>")
+        bid = b.get("id", "<no-id>")
+        out.append(f"{i}. {name} (ID: {bid})")
+    return "\n".join(out)
 
 @mcp.tool()
 async def list_tables(base_id_param: Optional[str] = None) -> str:
-    current_base = base_id_param or server_state.base_id
-    if not current_base:
-        return "No base ID provided."
-    result = await api_call(f"meta/bases/{current_base}/tables")
+    base_id = (base_id_param or server_state.base_id or "").strip()
+    if not base_id:
+        return "No base ID provided. Use set_base_id or pass base_id_param."
+    result = await api_call(f"meta/bases/{quote_plus(base_id)}/tables")
     if "error" in result:
         return f"Error: {result['error']}"
     tables = result.get("tables", [])
-    return "\n".join([f"{i+1}. {t['name']} (ID: {t['id']})" for i, t in enumerate(tables)]) or "No tables found."
-
+    if not tables:
+        return "No tables found."
+    out = []
+    for i, t in enumerate(tables, start=1):
+        name = t.get("name", "<unknown>")
+        tid = t.get("id", "<no-id>")
+        out.append(f"{i}. {name} (ID: {tid})")
+    return "\n".join(out)
 
 @mcp.tool()
 async def list_records(table_name: str, max_records: Optional[int] = 100, filter_formula: Optional[str] = None) -> str:
     if not server_state.base_id:
-        return "No base ID set."
-    params = {"maxRecords": max_records}
+        return "No base ID set. Use set_base_id to configure the base."
+    if not table_name:
+        return "Table name is required."
+    # Airtable expects table name/url encoded
+    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
+    params: Dict[str, Any] = {"maxRecords": int(max_records or 100)}
     if filter_formula:
         params["filterByFormula"] = filter_formula
-    result = await api_call(f"{server_state.base_id}/{table_name}", params=params)
+    result = await api_call(endpoint, params=params)
     if "error" in result:
         return f"Error: {result['error']}"
     records = result.get("records", [])
-    return "\n".join([f"{i+1}. {r['id']} - {r.get('fields', {})}" for i, r in enumerate(records)]) or "No records found."
-
+    if not records:
+        return "No records found."
+    lines: List[str] = []
+    for i, r in enumerate(records, start=1):
+        rid = r.get("id", "<no-id>")
+        fields = r.get("fields", {})
+        lines.append(f"{i}. {rid} - {fields}")
+    return "\n".join(lines)
 
 @mcp.tool()
 async def create_records(table_name: str, records_json: str) -> str:
     if not server_state.base_id:
-        return "No base ID set."
+        return "No base ID set. Use set_base_id to configure the base."
+    if not table_name:
+        return "Table name is required."
     try:
-        records_data = json.loads(records_json)
-        if not isinstance(records_data, list):
-            records_data = [records_data]
-        records = [{"fields": record} for record in records_data]
-        data = {"records": records}
-        result = await api_call(f"{server_state.base_id}/{table_name}", method="POST", data=data)
-        if "error" in result:
-            return f"Error: {result['error']}"
-        created_records = result.get("records", [])
-        return f"Successfully created {len(created_records)} records."
-    except json.JSONDecodeError:
-        return "Error: Invalid JSON format in records_json parameter."
-    except Exception as e:
-        return f"Error creating records: {str(e)}"
-
+        payload = json.loads(records_json) if isinstance(records_json, str) else records_json
+    except Exception:
+        return "Error: Invalid JSON for records_json."
+    if isinstance(payload, dict) and "records" not in payload:
+        # assume single record fields object
+        payload = {"records": [{"fields": payload}]}
+    elif isinstance(payload, list):
+        payload = {"records": [{"fields": r} if not ("fields" in r) else r for r in payload]}
+    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
+    result = await api_call(endpoint, method="POST", data=payload)
+    if "error" in result:
+        return f"Error: {result['error']}"
+    created = result.get("records", [])
+    return f"Successfully created {len(created)} records."
 
 @mcp.tool()
 async def update_records(table_name: str, records_data: str) -> str:
     if not server_state.base_id:
-        return "No base ID set."
+        return "No base ID set. Use set_base_id to configure the base."
+    if not table_name:
+        return "Table name is required."
     try:
-        # Auto-detect and parse JSON or TOON format
-        parsed_data = parse_data(records_data)
-
-        # Handle different TOON structures
-        if isinstance(parsed_data, dict):
-            # If it's a dict with multiple objects, extract the records
-            if 'records' in parsed_data:
-                records_data = parsed_data['records']
-                if not isinstance(records_data, list):
-                    records_data = [records_data]
-            else:
-                # Single record or list of records
-                records_data = list(parsed_data.values())
-                if not isinstance(records_data, list):
-                    records_data = [records_data]
-        elif isinstance(parsed_data, list):
-            records_data = parsed_data
-        else:
-            records_data = [parsed_data]
-
-        records = []
-        for record in records_data:
-            if "id" not in record:
-                return "Error: Each record must have an 'id' field."
-            rec_id = record.pop("id")
-            fields = record.get("fields", record)
-            records.append({"id": rec_id, "fields": fields})
-        data = {"records": records}
-        result = await api_call(f"{server_state.base_id}/{table_name}", method="PATCH", data=data)
-        if "error" in result:
-            return f"Error: {result['error']}"
-        updated_records = result.get("records", [])
-        return f"Successfully updated {len(updated_records)} records."
+        # parse_data may accept various formats (TOON or JSON)
+        parsed = parse_data(records_data)
     except Exception as e:
-        return f"Error updating records: {str(e)}. Please provide valid JSON or TOON format."
+        return f"Error parsing records data: {e}"
+    # Normalize to list of {id, fields}
+    candidates = []
+    if isinstance(parsed, dict) and "records" in parsed:
+        candidates = parsed["records"]
+    elif isinstance(parsed, list):
+        candidates = parsed
+    elif isinstance(parsed, dict):
+        # if dict mapping ids to fields or single record
+        # detect { "id": "...", "fields": {...} } or { "recId": { ... } }
+        if "id" in parsed:
+            candidates = [parsed]
+        else:
+            # treat as single fields dict -> error because id required for update
+            return "Error: update_records requires records with 'id' field."
+    else:
+        return "Error: Unsupported records_data format."
 
+    to_send = []
+    for rec in candidates:
+        if not isinstance(rec, dict) or "id" not in rec:
+            return "Error: each record must be a dict containing 'id' and 'fields' (or field keys)."
+        rid = rec["id"]
+        fields = rec.get("fields") or {k: v for k, v in rec.items() if k != "id"}
+        to_send.append({"id": rid, "fields": fields})
+
+    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
+    data = {"records": to_send}
+    result = await api_call(endpoint, method="PATCH", data=data)
+    if "error" in result:
+        return f"Error: {result['error']}"
+    updated = result.get("records", [])
+    return f"Successfully updated {len(updated)} records."
 
 @mcp.tool()
 async def set_base_id(base_id_param: str) -> str:
+    if not base_id_param:
+        return "Error: base_id_param required."
     server_state.base_id = base_id_param
     return f"Base ID set to: {base_id_param}"
 
-
 # --------------------------------------
-# RUN FASTMCP SERVER (HTTP para Railway)
+# Entrypoint
 # --------------------------------------
 if __name__ == "__main__":
     if not server_state.token:
-        print("Error: AIRTABLE_PERSONAL_ACCESS_TOKEN environment variable not set")
-        sys.exit(1)
+        logger.error("AIRTABLE_PERSONAL_ACCESS_TOKEN not set. Exiting.")
+        raise SystemExit(1)
 
-    mcp.run(
-        transport="http",
-        host="0.0.0.0",
-        port=PORT
-    )
+    logger.info("Starting Airtable MCP Inspector Server")
+    logger.info("Make sure PORT env var (or Railway) is set. Defaulting to %s", PORT)
+
+    # Run the MCP server using HTTP transport to be compatible with Railway/containers
+    # FastMCP's run method should be non-blocking-friendly
+    mcp.run(transport="http", host="0.0.0.0", port=PORT)
