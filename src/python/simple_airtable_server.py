@@ -8,9 +8,15 @@ import os
 import sys
 import json
 import logging
-import requests
-import traceback
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
+from urllib.parse import quote_plus
+
+# Async HTTP client
+try:
+    import httpx
+except ImportError:
+    print("Error: httpx not installed. Run 'pip install httpx'")
+    sys.exit(1)
 
 # Check if MCP SDK is installed
 try:
@@ -19,134 +25,114 @@ except ImportError:
     print("Error: MCP SDK not found. Please install with 'pip install mcp'")
     sys.exit(1)
 
-# Parse command line arguments
-if len(sys.argv) < 5:
-    print("Usage: python3 simple_airtable_server.py --token YOUR_TOKEN --base YOUR_BASE_ID")
-    sys.exit(1)
+# Load token and base ID from environment or CLI
+token = os.getenv("AIRTABLE_PERSONAL_ACCESS_TOKEN")
+base_id = os.getenv("AIRTABLE_BASE_ID")
 
-# Get the token and base ID from command line arguments
-token = None
-base_id = None
 for i in range(1, len(sys.argv)):
-    if sys.argv[i] == "--token" and i+1 < len(sys.argv):
-        token = sys.argv[i+1]
-    elif sys.argv[i] == "--base" and i+1 < len(sys.argv):
-        base_id = sys.argv[i+1]
+    if sys.argv[i] == "--token" and i + 1 < len(sys.argv):
+        token = sys.argv[i + 1]
+    elif sys.argv[i] == "--base" and i + 1 < len(sys.argv):
+        base_id = sys.argv[i + 1]
 
-if not token:
-    print("Error: No Airtable token provided. Use --token parameter.")
+if not token or not base_id:
+    print("Error: Provide Airtable token and base ID via ENV or CLI")
     sys.exit(1)
 
-if not base_id:
-    print("Error: No base ID provided. Use --base parameter.")
-    sys.exit(1)
-
-# Set up logging
+# Logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("airtable-mcp")
 
 # Create MCP server
 app = FastMCP("Airtable Tools")
 
-# Helper function for Airtable API calls
-async def airtable_api_call(endpoint, method="GET", data=None, params=None):
-    """Make an Airtable API call with error handling"""
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-    
+# -------------------------------
+# Helper function: async Airtable API call
+# -------------------------------
+async def airtable_api_call(endpoint: str, method: str = "GET", data: Optional[Any] = None, params: Optional[Dict] = None) -> Dict[str, Any]:
+    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
     url = f"https://api.airtable.com/v0/{endpoint}"
-    
-    try:
-        if method == "GET":
-            response = requests.get(url, headers=headers, params=params)
-        elif method == "POST":
-            response = requests.post(url, headers=headers, json=data)
-        else:
-            raise ValueError(f"Unsupported method: {method}")
-        
-        response.raise_for_status()
-        return response.json()
-    except Exception as e:
-        logger.error(f"API call error: {str(e)}")
-        return {"error": str(e)}
 
-# Claude-specific methods
-@mcp.rpc_method("resources/list")
+    async with httpx.AsyncClient() as client:
+        try:
+            resp = await client.request(method.upper(), url, headers=headers, json=data, params=params)
+            resp.raise_for_status()
+            try:
+                return resp.json()
+            except Exception:
+                return {"raw": resp.text}
+        except httpx.HTTPStatusError as e:
+            try:
+                body = e.response.json()
+            except Exception:
+                body = {"status_code": e.response.status_code, "text": e.response.text}
+            return {"error": f"API status error: {body}"}
+        except Exception as e:
+            return {"error": str(e)}
+
+# -------------------------------
+# Claude-specific RPC methods
+# -------------------------------
+@app.rpc_method("resources/list")
 async def resources_list(params: Dict = None) -> Dict:
-    """List available Airtable resources for Claude"""
     try:
-        # Return a simple list of resources
         resources = [
             {"id": "airtable_tables", "name": "Airtable Tables", "description": "Tables in your Airtable base"}
         ]
         return {"resources": resources}
     except Exception as e:
-        logger.error(f"Error in resources/list: {str(e)}")
+        logger.error(f"Error in resources/list: {e}")
         return {"error": {"code": -32000, "message": str(e)}}
 
-@mcp.rpc_method("prompts/list")
+@app.rpc_method("prompts/list")
 async def prompts_list(params: Dict = None) -> Dict:
-    """List available prompts for Claude"""
     try:
-        # Return a simple list of prompts
         prompts = [
             {"id": "tables_prompt", "name": "List Tables", "description": "List all tables"}
         ]
         return {"prompts": prompts}
     except Exception as e:
-        logger.error(f"Error in prompts/list: {str(e)}")
+        logger.error(f"Error in prompts/list: {e}")
         return {"error": {"code": -32000, "message": str(e)}}
 
-# Airtable tool functions
-@mcp.tool()
+# -------------------------------
+# Airtable Tool Functions
+# -------------------------------
+@app.tool()
 async def list_tables() -> str:
-    """List all tables in the specified base"""
-    try:
-        result = await airtable_api_call(f"meta/bases/{base_id}/tables")
-        
-        if "error" in result:
-            return f"Error: {result['error']}"
-        
-        tables = result.get("tables", [])
-        if not tables:
-            return "No tables found in this base."
-        
-        table_list = [f"{i+1}. {table['name']} (ID: {table['id']})" 
-                    for i, table in enumerate(tables)]
-        return "Tables in this base:\n" + "\n".join(table_list)
-    except Exception as e:
-        return f"Error listing tables: {str(e)}"
+    result = await airtable_api_call(f"meta/bases/{quote_plus(base_id)}/tables")
+    if "error" in result:
+        return f"Error: {result['error']}"
+    tables = result.get("tables", [])
+    if not tables:
+        return "No tables found in this base."
+    return "\n".join([f"{i+1}. {t['name']} (ID: {t['id']})" for i, t in enumerate(tables)])
 
-@mcp.tool()
+@app.tool()
 async def list_records(table_name: str, max_records: int = 100) -> str:
-    """List records from a table"""
-    try:
-        params = {"maxRecords": max_records}
-        result = await airtable_api_call(f"{base_id}/{table_name}", params=params)
-        
-        if "error" in result:
-            return f"Error: {result['error']}"
-        
-        records = result.get("records", [])
-        if not records:
-            return "No records found in this table."
-        
-        # Format the records for display
-        formatted_records = []
-        for i, record in enumerate(records):
-            record_id = record.get("id", "unknown")
-            fields = record.get("fields", {})
-            field_text = ", ".join([f"{k}: {v}" for k, v in fields.items()])
-            formatted_records.append(f"{i+1}. ID: {record_id} - {field_text}")
-        
-        return "Records:\n" + "\n".join(formatted_records)
-    except Exception as e:
-        return f"Error listing records: {str(e)}"
+    endpoint = f"{quote_plus(base_id)}/{quote_plus(table_name)}"
+    params = {"maxRecords": max_records}
+    result = await airtable_api_call(endpoint, params=params)
+    if "error" in result:
+        return f"Error: {result['error']}"
+    records = result.get("records", [])
+    if not records:
+        return "No records found in this table."
+    lines = []
+    for i, r in enumerate(records, start=1):
+        fields = r.get("fields", {})
+        lines.append(f"{i}. ID: {r.get('id', 'unknown')} - {fields}")
+    return "\n".join(lines)
 
-# Start the server
+@app.tool()
+async def set_base_id(new_base_id: str) -> str:
+    global base_id
+    base_id = new_base_id
+    return f"Base ID set to {new_base_id}"
+
+# -------------------------------
+# Server entrypoint
+# -------------------------------
 if __name__ == "__main__":
-    print(f"Starting Airtable MCP Server with token {token[:5]}...{token[-5:]} and base {base_id}")
-    # FastMCP uses `run()` to start the server (not `start()`) — use run() to avoid AttributeError
+    logger.info(f"Starting Airtable MCP Server on base {base_id}")
     app.run()
