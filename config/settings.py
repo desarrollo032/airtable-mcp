@@ -1,3 +1,4 @@
+
 """
 Configuration Settings for the MCP Server
 """
@@ -16,6 +17,19 @@ class Settings(BaseSettings):
     airtable_client_id: str = os.getenv("AIRTABLE_CLIENT_ID", "")
     airtable_client_secret: str = os.getenv("AIRTABLE_CLIENT_SECRET", "")
     airtable_redirect_uri: str = os.getenv("AIRTABLE_REDIRECT_URI", "")
+    
+    # Complete Airtable OAuth Scopes for full functionality
+    airtable_scopes: str = (
+        "data.records:read "
+        "data.records:write "
+        "data.recordComments:read "
+        "data.recordComments:write "
+        "schema.bases:read "
+        "schema.bases:write "
+        "webhook:manage "
+        "block:manage "
+        "user.email:read"
+    )
 
     # Database
     redis_host: str = os.getenv("REDIS_HOST", "localhost")
