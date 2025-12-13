@@ -155,6 +155,7 @@ async def api_call(endpoint: str, method: str = "GET", data: Optional[Any] = Non
         except Exception as e:
             return {"error": f"Unexpected error: {str(e)}"}
 
+
 # ---------------------------
 # MCP Tools
 # ---------------------------
@@ -259,117 +260,15 @@ async def set_base_id(base_id_param: str) -> str:
     server_state.base_id = base_id_param
     return f"Base ID set to: {base_id_param}"
 
-
 # ---------------------------
-# Register all tools with MCP server
+# Register all advanced tools with MCP server
 # ---------------------------
 
-# Register original tools
-@mcp.tool()
-async def list_bases() -> str:
-    result = await api_call("meta/bases")
-    if "error" in result:
-        return f"Error: {result['error']}"
-    bases = result.get("bases", [])
-    if not bases:
-        return "No bases found."
-    return "\n".join(f"{i+1}. {b.get('name','<unknown>')} (ID: {b.get('id','<no-id>')})" for i, b in enumerate(bases))
-
-@mcp.tool()
-async def list_tables(base_id_param: Optional[str] = None) -> str:
-    base_id = (base_id_param or server_state.base_id or "").strip()
-    if not base_id:
-        return "No base ID provided. Use set_base_id or pass base_id_param."
-    result = await api_call(f"meta/bases/{quote_plus(base_id)}/tables")
-    if "error" in result:
-        return f"Error: {result['error']}"
-    tables = result.get("tables", [])
-    if not tables:
-        return "No tables found."
-    return "\n".join(f"{i+1}. {t.get('name','<unknown>')} (ID: {t.get('id','<no-id>')})" for i, t in enumerate(tables))
-
-@mcp.tool()
-async def list_records(table_name: str, max_records: Optional[int] = 100, filter_formula: Optional[str] = None) -> str:
-    if not server_state.base_id:
-        return "No base ID set. Use set_base_id to configure the base."
-    if not table_name:
-        return "Table name is required."
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    params: Dict[str, Any] = {"maxRecords": int(max_records or 100)}
-    if filter_formula:
-        params["filterByFormula"] = filter_formula
-    result = await api_call(endpoint, params=params)
-    if "error" in result:
-        return f"Error: {result['error']}"
-    records = result.get("records", [])
-    if not records:
-        return "No records found."
-    return "\n".join(f"{i+1}. {r.get('id','<no-id>')} - {r.get('fields',{})}" for i, r in enumerate(records))
-
-@mcp.tool()
-async def create_records(table_name: str, records_json: str) -> str:
-    if not server_state.base_id:
-        return "No base ID set. Use set_base_id to configure the base."
-    if not table_name:
-        return "Table name is required."
-    try:
-        payload = json.loads(records_json) if isinstance(records_json, str) else records_json
-    except Exception:
-        return "Error: Invalid JSON for records_json."
-    if isinstance(payload, dict) and "records" not in payload:
-        payload = {"records": [{"fields": payload}]}
-    elif isinstance(payload, list):
-        payload = {"records": [{"fields": r} if "fields" not in r else r for r in payload]}
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    result = await api_call(endpoint, method="POST", data=payload)
-    if "error" in result:
-        return f"Error: {result['error']}"
-    return f"Successfully created {len(result.get('records', []))} records."
-
-@mcp.tool()
-async def update_records(table_name: str, records_data: str) -> str:
-    if not server_state.base_id:
-        return "No base ID set. Use set_base_id to configure the base."
-    if not table_name:
-        return "Table name is required."
-    try:
-        parsed = parse_data(records_data)
-    except Exception as e:
-        return f"Error parsing records data: {e}"
-    candidates = []
-    if isinstance(parsed, dict) and "records" in parsed:
-        candidates = parsed["records"]
-    elif isinstance(parsed, list):
-        candidates = parsed
-    elif isinstance(parsed, dict) and "id" in parsed:
-        candidates = [parsed]
-    else:
-        return "Error: update_records requires records with 'id' field."
-    to_send = []
-    for rec in candidates:
-        if not isinstance(rec, dict) or "id" not in rec:
-            return "Error: each record must have 'id' and 'fields'."
-        rid = rec["id"]
-        fields = rec.get("fields") or {k: v for k, v in rec.items() if k != "id"}
-        to_send.append({"id": rid, "fields": fields})
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    result = await api_call(endpoint, method="PATCH", data={"records": to_send})
-    if "error" in result:
-        return f"Error: {result['error']}"
-    return f"Successfully updated {len(result.get('records', []))} records."
-
-@mcp.tool()
-async def set_base_id(base_id_param: str) -> str:
-    if not base_id_param:
-        return "Error: base_id_param required."
-    server_state.base_id = base_id_param
-    return f"Base ID set to: {base_id_param}"
+# Set access token for advanced tools
+mcp._access_token = server_state.token
 
 # Register advanced tools
 try:
-    # Set access token for advanced tools
-    mcp._access_token = server_state.token
-    
     # Register comment tools
     register_comment_tools(mcp, airtable_service)
     logger.info("✅ Comment tools registered")
@@ -394,6 +293,7 @@ try:
     
 except Exception as e:
     logger.warning(f"Could not register advanced tools: {e}")
+
 
 # ---------------------------
 # Entrypoint

@@ -3,7 +3,8 @@ Airtable Service for API interactions
 """
 import aiohttp
 import os
-from typing import Dict, Any, List
+
+from typing import Dict, Any, List, Optional
 
 class AirtableService:
     def __init__(self):
