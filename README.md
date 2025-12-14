@@ -1,8 +1,10 @@
 # Servidor Airtable MCP
 
-[![MCP](https://img.shields.io/badge/MCP-3.2.6-blue)](https://github.com/rashidazarang/airtable-mcp) [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/) [![AI Agent](https://img.shields.io/badge/AI_Agent-Enhanced-purple)](https://github.com/rashidazarang/airtable-mcp) [![Security](https://img.shields.io/badge/Security-Enterprise-green)](https://github.com/rashidazarang/airtable-mcp) [![Protocol](https://img.shields.io/badge/Protocol-2024--11--05-success)](https://modelcontextprotocol.io/) [![FastMCP](https://img.shields.io/badge/FastMCP-Modern-orange)](https://github.com/rashidazarang/airtable-mcp)
 
-🤖 **Agente IA Revolucionario v3.2.6** - Servidor Airtable MCP avanzado impulsado por IA con **integración FastMCP moderna**, transporte HTTP/SSE para streaming en tiempo real, despliegue optimizado en Railway, y arquitectura multi-lenguaje con compatibilidad completa.
+[![MCP](https://img.shields.io/badge/MCP-3.2.7-blue)](https://github.com/rashidazarang/airtable-mcp) [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/) [![AI Agent](https://img.shields.io/badge/AI_Agent-Enhanced-purple)](https://github.com/rashidazarang/airtable-mcp) [![Security](https://img.shields.io/badge/Security-Enterprise-green)](https://github.com/rashidazarang/airtable-mcp) [![Protocol](https://img.shields.io/badge/Protocol-2024--11--05-success)](https://modelcontextprotocol.io/) [![FastMCP](https://img.shields.io/badge/FastMCP-Modern-orange)](https://github.com/rashidazarang/airtable-mcp)
+
+
+🤖 **Agente IA Revolucionario v3.2.7** - Servidor Airtable MCP avanzado impulsado por IA con **integración FastMCP moderna**, transporte HTTP/SSE para streaming en tiempo real, despliegue optimizado en Railway, y arquitectura multi-lenguaje con compatibilidad completa.
 
 ---
 
@@ -24,7 +26,8 @@
 
 ## Últimas Versiones
 
-### 🚀 v3.2.6 - Integración FastMCP Moderna y Despliegue Optimizado
+
+### 🚀 v3.2.7 - Integración Completa OAuth + FastMCP
 
 **Mejoras Principales** con compatibilidad completa con versiones anteriores:
 - ⚡ **FastMCP Moderno** - Integración completa con FastMCP para transporte HTTP/SSE
@@ -665,4 +668,5 @@ Licencia MIT - vea el archivo [LICENSE](./LICENSE) para más detalles
 
 ---
 
-**Versión**: 3.2.6 | **Estado**: ⚡ FastMCP Moderno + 🔷 TypeScript Estable + 🤖 Agente IA | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **Última Actualización**: 7 de Diciembre de 2025
+
+**Versión**: 3.2.7 | **Estado**: ⚡ FastMCP Moderno + 🔷 TypeScript Estable + 🤖 Agente IA + 🔐 OAuth Completo | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **OAuth**: 34 Herramientas MCP | **Última Actualización**: 7 de Diciembre de 2025
