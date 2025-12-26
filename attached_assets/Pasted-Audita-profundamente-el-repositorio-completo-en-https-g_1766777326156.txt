@@ -1,0 +1,37 @@
+Audita profundamente el repositorio completo en https://github.com/desarrollo032/airtable-mcp y realiza mejoras que eliminen código y archivos innecesarios, incrementen calidad, seguridad, rendimiento y claridad sin eliminar funcionalidad. Usa la documentación del proyecto y las mejores prácticas para MCP y servidores Airtable como guía.
+Objetivos principales:
+Estructura y limpieza de archivos
+Genera un listado de todos los archivos y carpetas actuales.
+Identifica y clasifica archivos obsoletos, duplicados o sin uso funcional (por ejemplo, documentación de planificación antigua, archivos de prueba sin cobertura real, scripts de ejemplo obsoletos).
+Propón una estructura optimizada recomendada (por ejemplo: separar código Python, Node/TypeScript, configuración, docs vivas, tests y ejemplos)
+Elimina o archiva fuera de la raíz del proyecto los archivos innecesarios.
+Revisión de dependencias y configuración
+En requirements.txt y package.json, identifica dependencias no usadas o inseguras y sugiere eliminarlas.
+Asegura que todas las variables de entorno requeridas estén documentadas claramente en .env.example y en la documentación actualizada.
+Calidad de código y seguridad
+Revisa y corrige errores de sintaxis y lógica tanto en Python como Node/TypeScript.
+Agrega manejo de errores sólido y validación de entradas en todas las rutas/endpoints y funciones críticas.
+Asegura el manejo adecuado de secretos y tokens (no exponer en logs o archivos de configuración públicos).
+Añade recomendaciones de validaciones para límites de la API de Airtable y reintentos.
+Consistencia y modularización
+Refactoriza lógica duplicada entre Python y Node/TypeScript para usar módulos compartidos donde tenga sentido.
+Define claramente los puntos de entrada principales (por ejemplo: servidor FastMCP principal, wrapper Python, API Node).
+Reestructura el código para separar responsabilidades (servidor, cliente Airtable, autenticación, utilities).
+Documentación y ejemplos actualizados
+Actualiza el README.md para incluir:
+• Descripción clara del proyecto y arquitectura multiplataforma.
+• Pasos de instalación y ejemplo de uso para Python y Node/TypeScript.
+• Variables de entorno necesarias y cómo configurarlas.
+Reescribe secciones del DEPLOYMENT.md para reflejar la configuración más reciente (ej. uso de Railway, Docker, FastMCP).
+Elimina o fusiona documentación redundante y obsoleta (planes antiguos, notas duplicadas).
+Pruebas y calidad continua
+Evalúa la cobertura de tests existentes; sugiere pruebas unitarias y de integración adicionales para Python y Node.
+Propón una configuración de CI (por ejemplo, GitHub Actions) que corra tests automáticamente en cada PR.
+Documenta comandos de test y ejemplos de escenarios de prueba (mock de Airtable API).
+Salidas esperadas:
+Informe de cada paso realizado con justificación (qué, por qué y cómo).
+Código corregido según mejores prácticas.
+Archivos removidos o reubicados con explicación.
+Documentación final actualizada con ejemplos funcionales.
+Esquema de estructura de proyecto optimizada.
+Considera la documentación del protocolo MCP y la implementación de servidores MCP/Airtable como referencia de funcionalidad esperada, asegurando que el servidor siga cumpliendo todas las herramientas de MCP, CRUD, schema inspection, record operations, etc.
