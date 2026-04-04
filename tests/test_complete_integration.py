@@ -181,7 +181,7 @@ class TestCommentsTools(unittest.TestCase):
         self.tools = CommentsTools(self.mock_service)
 
     @patch('src.python.tools.comments.CommentsTools.get_record_comments')
-    async def test_get_record_comments_tool(self, mock_get_comments the MCP):
+    async def test_get_record_comments_tool(self, mock_get_comments):
         """Test tool for getting record comments"""
         mock_get_comments.return_value = "Comments retrieved successfully"
         

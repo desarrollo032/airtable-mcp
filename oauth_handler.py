@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import secrets
 import aiohttp
 from typing import Dict, Optional
+from urllib.parse import urlencode
 from config import settings
 
 # Seleccionar almacenamiento según entorno
@@ -27,8 +28,7 @@ class AirtableOAuthHandler:
             "scope": settings.AIRTABLE_SCOPES,
             "state": state
         }
-        query = "&".join([f"{k}={v}" for k, v in params.items()])
-        return f"https://airtable.com/oauth2/v1/authorize?{query}"
+        return f"https://airtable.com/oauth2/v1/authorize?{urlencode(params)}"
 
     @staticmethod
     async def exchange_code_for_tokens(code: str) -> Dict:
