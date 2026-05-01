@@ -7,10 +7,12 @@ import secrets
 import aiohttp
 from typing import Dict, Optional
 from urllib.parse import urlencode
-from config import settings
+from config.settings import get_settings
+import os
 
 # Seleccionar almacenamiento según entorno
-if settings.ENVIRONMENT == "production":
+settings = get_settings()
+if os.getenv("ENVIRONMENT", "development") == "production":
     from storage.redis_storage import RedisStorage
     storage = RedisStorage()
 else:

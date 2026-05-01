@@ -4,13 +4,14 @@ Memory storage implementation for Airtable MCP Server (development)
 from datetime import datetime, timedelta
 import json
 from cryptography.fernet import Fernet
-from config import settings
+from config.settings import get_settings
+settings = get_settings()
 
 class MemoryStorage:
     def __init__(self):
         self.oauth_states = {}  # {state: data}
         self.user_tokens = {}   # {user_id: tokens}
-        self.cipher = Fernet(settings.SECRET_KEY.encode())
+        self.cipher = Fernet(settings.secret_key.encode())
 
     def _encrypt(self, data: str) -> bytes:
         """Encrypt sensitive data"""
