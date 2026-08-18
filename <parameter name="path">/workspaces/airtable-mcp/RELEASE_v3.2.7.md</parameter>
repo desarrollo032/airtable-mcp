@@ -1,0 +1,57 @@
+<parameter name="content"># Release Summary: v3.2.6 – v3.2.7
+
+## Release Information
+- **Version**: v3.2.7
+- **Type**: Initial Release (First Tag)
+- **Release Date**: December 2024
+- **Compatibility**: Multi-platform (Node.js, Python, TypeScript)
+
+---
+
+## 🎉 Initial Release - Airtable MCP Server v3.2.7
+
+Estamos emocionados de presentar la **versión inicial v3.2.7** del servidor Airtable MCP (Model Context Protocol). Esta primera versión establece una base sólida para la integración avanzada con Airtable a través de múltiples lenguajes y plataformas.
+
+---
+
+## 🚀 Features
+
+### Core MCP Server
+- **Servidor MCP completo** para integración con Airtable
+- **Soporte multi-lenguaje**: TypeScript/JavaScript y Python
+- **Arquitectura modular** con separación clara de responsabilidades
+- **Sistema de plugins** extensible para funcionalidades adicionales
+
+### Airtable Integration
+- **CRUD completo** para tablas de Airtable
+- **Gestión avanzada de registros** con validaciones
+- **Soporte para campos complejos** (attachments, lookups, formulas)
+- **Bulk operations** para operaciones en lote
+- **Webhooks avanzados** para eventos en tiempo real
+
+### Authentication & Security
+- **OAuth 2.0** completo con soporte para múltiples providers
+- **Sistema de tokens** con almacenamiento seguro
+- **Rate limiting** configurable por usuario/API
+- **Validación de permisos** granular
+- **Headers de seguridad** implementados
+
+### Natural Language Processing
+- **Procesamiento de lenguaje natural** para comandos en lenguaje humano
+- **Mapeador de intents** inteligente
+- **Validador semántico** para comandos complejos
+- **Context handler** para conversaciones stateful
+- **Analizador de fechas** flexible
+
+---
+
+## 🔧 Improvements
+
+### Performance & Scalability
+- **Rate limiting inteligente** con backoff automático
+- **Caching optimizado** para operaciones frecuentes
+- **Connection pooling** para bases de datos externas
+- **Async/await** en toda la codebase TypeScript
+- **Memory management** mejorado para operaciones
+
+[Response interrupted by a tool use result. Only one tool may be used at a time and should be placed at the end of the message.]</parameter>

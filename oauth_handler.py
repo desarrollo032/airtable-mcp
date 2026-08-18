@@ -6,10 +6,13 @@ from datetime import datetime, timedelta
 import secrets
 import aiohttp
 from typing import Dict, Optional
-from config import settings
+from urllib.parse import urlencode
+from config.settings import get_settings
+import os
 
 # Seleccionar almacenamiento según entorno
-if settings.ENVIRONMENT == "production":
+settings = get_settings()
+if os.getenv("ENVIRONMENT", "development") == "production":
     from storage.redis_storage import RedisStorage
     storage = RedisStorage()
 else:
@@ -27,8 +30,7 @@ class AirtableOAuthHandler:
             "scope": settings.AIRTABLE_SCOPES,
             "state": state
         }
-        query = "&".join([f"{k}={v}" for k, v in params.items()])
-        return f"https://airtable.com/oauth2/v1/authorize?{query}"
+        return f"https://airtable.com/oauth2/v1/authorize?{urlencode(params)}"
 
     @staticmethod
     async def exchange_code_for_tokens(code: str) -> Dict:

@@ -1,8 +1,16 @@
+
 #!/usr/bin/env python3
 """
 Airtable MCP Inspector Server - FastMCP 2.x (Corrected)
 - Async HTTP client (httpx) instead of requests to avoid blocking the event loop.
 - Robust imports, safe URL building, clear error handling.
+- Comprehensive Airtable integration with all scopes:
+  * data.records:read/write
+  * data.recordComments:read/write
+  * schema.bases:read/write
+  * webhook:manage
+  * block:manage
+  * user.email:read
 - Usage:
     python src/python/inspector_server.py
 """
@@ -56,6 +64,23 @@ except Exception:
             except Exception:
                 return x
 
+# Import AirtableService
+try:
+    from services.airtable_service import AirtableService
+except ImportError:
+    logger.exception("AirtableService not found. Make sure services/airtable_service.py exists")
+    raise
+
+# Import all new tools
+try:
+    from src.python.tools.comments import register_comment_tools
+    from src.python.tools.schema import register_schema_tools
+    from src.python.tools.webhooks_advanced import register_webhook_tools_advanced
+    from src.python.tools.user_info import register_user_info_tools
+    from src.python.tools.blocks import register_blocks_tools
+except ImportError as e:
+    logger.warning(f"Could not import some advanced tools: {e}")
+
 # Load optional config.json
 config_file = os.path.join(os.path.dirname(__file__), "..", "..", "config.json")
 if os.path.exists(config_file):
@@ -79,7 +104,10 @@ if not AIRTABLE_BASE_ID:
     logger.warning("No Airtable base ID set; some tools will require set_base_id")
 
 # Initialize MCP
-mcp = FastMCP("Airtable Tools")
+mcp = FastMCP("Airtable Tools - Complete Integration")
+
+# Initialize AirtableService
+airtable_service = AirtableService()
 
 # Encapsulated server state
 class ServerState:
@@ -126,6 +154,7 @@ async def api_call(endpoint: str, method: str = "GET", data: Optional[Any] = Non
             return {"error": f"Network error: {str(e)}"}
         except Exception as e:
             return {"error": f"Unexpected error: {str(e)}"}
+
 
 # ---------------------------
 # MCP Tools
@@ -232,6 +261,41 @@ async def set_base_id(base_id_param: str) -> str:
     return f"Base ID set to: {base_id_param}"
 
 # ---------------------------
+# Register all advanced tools with MCP server
+# ---------------------------
+
+# Set access token for advanced tools
+mcp._access_token = server_state.token
+
+# Register advanced tools
+try:
+    # Register comment tools
+    register_comment_tools(mcp, airtable_service)
+    logger.info("✅ Comment tools registered")
+    
+    # Register schema tools
+    register_schema_tools(mcp, airtable_service)
+    logger.info("✅ Schema tools registered")
+    
+    # Register webhook tools
+    register_webhook_tools_advanced(mcp, airtable_service)
+    logger.info("✅ Webhook tools registered")
+    
+    # Register user info tools
+    register_user_info_tools(mcp, airtable_service)
+    logger.info("✅ User info tools registered")
+    
+    # Register blocks tools
+    register_blocks_tools(mcp, airtable_service)
+    logger.info("✅ Blocks tools registered")
+    
+    logger.info("🎉 All advanced tools registered successfully!")
+    
+except Exception as e:
+    logger.warning(f"Could not register advanced tools: {e}")
+
+
+# ---------------------------
 # Entrypoint
 # ---------------------------
 if __name__ == "__main__":
@@ -239,6 +303,7 @@ if __name__ == "__main__":
         logger.error("AIRTABLE_PERSONAL_ACCESS_TOKEN not set. Exiting.")
         raise SystemExit(1)
 
-    logger.info("Starting Airtable MCP Inspector Server")
+    logger.info("Starting Airtable MCP Inspector Server - Complete Integration")
     logger.info("PORT=%s", PORT)
+    logger.info("Available tools: Basic + Comments + Schema + Webhooks + User Info + Blocks")
     mcp.run(transport="http", host="0.0.0.0", port=PORT)
