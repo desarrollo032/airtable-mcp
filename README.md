@@ -1,672 +1,468 @@
-# Servidor Airtable MCP
+# 🧠 Airtable Brain MCP
 
+> Servidor [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) para conectar asistentes de IA con Airtable de forma segura, extensible y orientada a automatización.
 
-[![MCP](https://img.shields.io/badge/MCP-3.2.7-blue)](https://github.com/rashidazarang/airtable-mcp) [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/) [![AI Agent](https://img.shields.io/badge/AI_Agent-Enhanced-purple)](https://github.com/rashidazarang/airtable-mcp) [![Security](https://img.shields.io/badge/Security-Enterprise-green)](https://github.com/rashidazarang/airtable-mcp) [![Protocol](https://img.shields.io/badge/Protocol-2024--11--05-success)](https://modelcontextprotocol.io/) [![FastMCP](https://img.shields.io/badge/FastMCP-Modern-orange)](https://github.com/rashidazarang/airtable-mcp)
+[![MCP](https://img.shields.io/badge/MCP-compatible-6f42c1?style=for-the-badge)](https://modelcontextprotocol.io/)
+[![FastMCP](https://img.shields.io/badge/FastMCP-2.x-ff6b35?style=for-the-badge)](https://gofastmcp.com/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e?style=for-the-badge)](./LICENSE)
 
-
-🤖 **Agente IA Revolucionario v3.2.7** - Servidor Airtable MCP avanzado impulsado por IA con **integración FastMCP moderna**, transporte HTTP/SSE para streaming en tiempo real, despliegue optimizado en Railway, y arquitectura multi-lenguaje con compatibilidad completa.
-
----
-
-## 📑 Tabla de Contenidos
-
-- [Últimas Versiones](#últimas-versiones)
-- [Suite de Inteligencia IA](#-suite-de-inteligencia-ia)
-- [Características Principales](#-características)
-- [Requisitos Previos](#-requisitos-previos)
-- [Inicio Rápido](#-inicio-rápido)
-- [Ejemplos de Uso](#-ejemplos-de-uso)
-- [Herramientas Disponibles](#-herramientas-disponibles-33-total)
-- [Configuración Avanzada](#-configuración-avanzada)
-- [Pruebas](#-pruebas)
-- [Solución de Problemas](#-solución-de-problemas)
-- [Documentación](#-documentación)
+<p align="center">
+  <strong>Datos de Airtable disponibles para tus agentes, con control de acceso, validación y varios transportes MCP.</strong>
+</p>
 
 ---
 
-## Últimas Versiones
+## 📌 ¿Qué es este proyecto?
 
+**Airtable Brain MCP** es una copia evolucionada y una base de experimentación del servidor `airtable-mcp`, adaptada para mejorar sus capacidades y facilitar su ejecución en entornos locales, Replit, Docker y Railway.
 
-### 🚀 v3.2.7 - Integración Completa OAuth + FastMCP
+El proyecto expone Airtable como herramientas MCP para que clientes como Claude, ChatGPT u otros agentes compatibles puedan:
 
-**Mejoras Principales** con compatibilidad completa con versiones anteriores:
-- ⚡ **FastMCP Moderno** - Integración completa con FastMCP para transporte HTTP/SSE
-- 🌐 **Transporte HTTP con SSE** - Streaming en tiempo real para aplicaciones de producción
-- 🚂 **Despliegue Railway Optimizado** - Configuración Docker builder con manejo dinámico de puertos
-- 🏗️ **Arquitectura Multi-Lenguaje** - Soporte completo para Python, Node.js y TypeScript
-- 🔧 **Configuración Automática** - Auto-detección de STDIO/HTTP según entorno
-- 📦 **Sin Compilación en GitHub Actions** - Ejecución directa sin pasos de build
-- 🐳 **Docker Producción** - Imágenes optimizadas para Railway y entornos de producción
-- 🔄 **Comandos Diferenciados** - `npm run dev` para desarrollo, `npm start` para producción
+- 🔎 Descubrir bases, tablas y registros.
+- ✍️ Crear y actualizar datos desde lenguaje natural.
+- 🧩 Consultar esquemas y metadatos.
+- 🔐 Aplicar reglas de gobernanza, listas permitidas y políticas PII.
+- 🌐 Ejecutar el servidor mediante STDIO o HTTP.
+- 🔌 Integrar OAuth, webhooks y almacenamiento auxiliar cuando el flujo lo requiere.
 
-### 🚀 v3.2.5 - ID de Base Opcional y Soporte Mejorado para Múltiples Bases
+> **Importante:** este repositorio no es una copia oficial de Airtable ni del protocolo MCP. Las implementaciones se mantienen aquí para mejorar, adaptar y probar funcionalidades sobre la base existente.
 
-**Mejoras Principales** con compatibilidad completa con versiones anteriores:
-- �� **ID de Base Opcional** - Comience sin especificar una base, descúbralas usando la herramienta `list_bases`
-- 🔍 **Descubrimiento de Base Mejorado** - Nueva herramienta `list_bases` completamente implementada en TypeScript
-- 🎯 **Selección de Base Dinámica** - Especifique IDs de base por llamada de herramienta, sin requisito de inicio
-- ✅ **Problema #9 Resuelto** - Resolvió la limitación "base requerida al inicio"
-- 🔧 **Gobernanza Mejorada** - Manejo inteligente de lista blanca de base para flujos de trabajo multi-base
-- 📦 **Soporte Completo de STDIO** - Compatibilidad confirmada con Claude Desktop/Code
+## ✨ Capacidades principales
 
-### 📋 v3.2.4 - Corrección de Seguridad XSS y Protección Completa
+| Área | Capacidades |
+| --- | --- |
+| 🧠 **MCP** | Herramientas, recursos, prompts y transporte HTTP/STDIO según la implementación elegida. |
+| 🗂️ **Airtable** | Descubrimiento de bases, tablas, lectura de registros y operaciones de escritura. |
+| 🛡️ **Gobernanza** | Allowlist de bases/tablas, operaciones permitidas, redacción de PII y errores controlados en TypeScript. |
+| ⚡ **Rendimiento** | Cliente HTTP asíncrono con `httpx`, operaciones por lotes en la implementación TypeScript y límites de solicitudes. |
+| 🔁 **Integraciones** | OAuth 2.0, ChatGPT, webhooks, Redis y almacenamiento Back4App/Mongo en módulos opcionales. |
+| 🧰 **DX** | TypeScript tipado, Zod, ESLint, Prettier, Jest, CLI y ejemplos de configuración para clientes MCP. |
+| 🚀 **Despliegue** | Replit, Docker Compose, Railway, ejecución local y proceso web compatible con `PORT`. |
 
-**Mejoras Principales** con compatibilidad completa con versiones anteriores:
-- 🔧 **Arquitectura TypeScript Reparada** - Se resolvieron problemas de compilación, separación adecuada de tipos y código en tiempo de ejecución
-- 📁 **Organización de Clase Mundial** - Proyecto reestructurado con src/typescript, src/javascript, src/python
-- 🔒 **Corrección de Seguridad Completa** - Vulnerabilidad de inyección de comandos completamente resuelta con validación integral
-- 🔷 **Implementación de TypeScript** - Servidor completamente seguro de tipos con validación estricta
-- 📘 **Definiciones de Tipo Integrales** - Todos los 33 herramientas y 10 mensajes de IA completamente tipificados
-- 🛡️ **Seguridad en Tiempo de Compilación** - Detecte errores antes de la ejecución con verificación de tipos avanzada
-- 🎯 **Experiencia del Desarrollador** - Soporte para IntelliSense, autocompletado y refactorización
-- 🔄 **Distribución Dual** - Use con JavaScript o TypeScript, su elección
+## 🧱 Implementaciones disponibles
 
----
+El repositorio contiene varias implementaciones que comparten el objetivo, pero no exponen exactamente las mismas herramientas.
 
-## 🤖 Suite de Inteligencia IA
+### ✅ FastMCP Python — recomendada para el entorno actual
 
-**Inteligencia Completa Impulsada por IA** con capacidades empresariales:
-- 🤖 **10 Plantillas de Mensajes IA** - Análisis avanzado, predicciones y automatización
-- 🔮 **Análisis Predictivo** - Pronóstico y análisis de tendencias con intervalos de confianza
-- 🗣️ **Procesamiento de Lenguaje Natural** - Consulte sus datos usando lenguaje humano
-- �� **Inteligencia Empresarial** - Información automatizada y recomendaciones
-- 🏗️ **Diseño de Esquema Inteligente** - Arquitectura de base de datos optimizada para IA
-- ⚡ **Automatización de Flujos de Trabajo** - Optimización de procesos inteligente
-- 🔍 **Auditoría de Calidad de Datos** - Evaluación de calidad integral y correcciones
-- 📈 **Análisis Estadístico** - Análisis avanzado con pruebas de significancia
+Entrada principal: `src/python/inspector_server.py`
 
----
+Es la ruta usada por `npm run dev` y por el punto de entrada `app.py`. Utiliza FastMCP 2.x, `httpx` y transporte HTTP.
 
-## ✨ Características
+Herramientas disponibles:
 
-### 🔍 Datos y Consultas
-- **Consultas de Lenguaje Natural** - Haga preguntas sobre sus datos en inglés simple
-- **Operaciones CRUD Completas** - Crear, leer, actualizar y eliminar registros
-- **Descubrimiento de Bases** - Explore todas las bases accesibles y sus esquemas
+| Herramienta | Función |
+| --- | --- |
+| `list_bases` | Lista las bases accesibles con el token configurado. |
+| `list_tables` | Lista las tablas de una base. |
+| `list_records` | Consulta registros, con límite y filtro por fórmula. |
+| `create_records` | Crea uno o varios registros a partir de JSON. |
+| `update_records` | Actualiza registros a partir de JSON o formato TOON. |
+| `set_base_id` | Cambia la base activa durante la sesión. |
 
-### 🏗️ Gestión de Estructura
-- **Gestión Avanzada de Esquemas** - Crear tablas, campos y gestionar la estructura de base
-- **Gestión de Campos** - Agregue, modifique y elimine campos programáticamente
-- **Operaciones por Lotes** - Crear, actualizar, eliminar hasta 10 registros a la vez
+### 🔐 MCP Python extendido con recursos y prompts
 
-### 🌐 Integración y Webhooks
-- **Gestión de Webhooks** - Crear y gestionar webhooks para notificaciones en tiempo real
-- **Gestión de Adjuntos** - Cargue archivos a través de URLs a campos de adjuntos
-- **Herramientas de Colaboración** - Gestione colaboradores de base y vistas compartidas
+Entrada: `src/python/auth/src/server.py`
 
-### 🔐 Seguridad y Rendimiento
-- **Autenticación Segura** - Utiliza variables de entorno para credenciales
-- **Seguridad Empresarial** - OAuth2, limitación de velocidad, validación integral
-- **Rápido y Confiable** - Construido con Node.js para rendimiento óptimo
+Esta variante añade:
 
-### 🎯 Herramientas y APIs
-- **33 Herramientas Potentes** - Cobertura completa de API Airtable con operaciones por lotes
-- **Integración IA** - Mensajes y muestreo para operaciones de datos inteligentes
-- **Configuración Fácil** - Múltiples opciones de instalación disponibles
+- `get_record` y `delete_records`.
+- Recursos `airtable://base/{base_id}` y `airtable://base/{base_id}/table/{table_name}`.
+- Roots MCP para exportaciones.
+- Prompts guiados para análisis, diseño de esquemas y migraciones.
+- Completions y parseo JSON/TOON.
+- Middleware y puntos de integración para autenticación/OAuth.
 
----
+### 🔷 TypeScript — gobernanza y operaciones estructuradas
 
-## 📋 Requisitos Previos
+Entrada: `src/typescript/airtable-mcp-server.ts`
 
-- Node.js 14+ instalado en su sistema
-- Una cuenta Airtable con Token de Acceso Personal
-- Su ID de Base Airtable (opcional en v3.2.5+)
+Registra herramientas con esquemas Zod y respuestas estructuradas:
 
----
+`list_bases` · `describe` · `query` · `list_governance` · `list_exceptions` · `create` · `update` · `upsert` · `list_webhooks` · `create_webhook` · `refresh_webhook`
 
-## 🚀 Inicio Rápido
+Incluye:
 
-### Paso 1: Obtenga sus Credenciales de Airtable
+- ✅ Validación estricta de entradas.
+- ✅ `dryRun` para revisar cambios antes de escribir.
+- ✅ Idempotency keys para operaciones de escritura.
+- ✅ Chunking de registros según el límite de Airtable.
+- ✅ Allowlist de bases y tablas.
+- ✅ Políticas `mask`, `hash` y `drop` para campos sensibles.
+- ✅ Rate limiting y registro de excepciones.
+- ✅ Transporte STDIO y HTTP/SSE en el servidor TypeScript.
 
-#### 1. Token de Acceso Personal
-Visite [Cuenta de Airtable](https://airtable.com/account) → Cree un token con los siguientes ámbitos:
-- `data.records:read` - Leer registros de tablas
-- `data.records:write` - Crear, actualizar, eliminar registros
-- `schema.bases:read` - Ver esquemas de tablas
-- `schema.bases:write` - **Nuevo en v1.5.0** - Crear/modificar tablas y campos
-- `webhook:manage` - (Opcional) Para características de webhook
+### 📦 JavaScript y OAuth — compatibilidad
 
-#### 2. ID de Base
-Abra su base Airtable y copie el ID de la URL:
-```
-https://airtable.com/[BASE_ID]/...
+- `src/javascript/airtable_simple_production.js`: servidor JavaScript con validación, rate limiting, webhooks y compatibilidad con el flujo HTTP histórico.
+- `src/javascript/airtable_simple.js`: implementación JavaScript simple/legacy.
+- `src/oauth_server.js`: servidor OAuth separado para el flujo de autorización de Airtable y clientes que necesitan callback.
+
+Estas variantes se conservan para compatibilidad y migración. Para nuevos cambios, prioriza FastMCP Python o TypeScript.
+
+## 🗺️ Arquitectura
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│ Cliente MCP                                                     │
+│ Claude Desktop · ChatGPT · Cursor · Windsurf · Inspector        │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │ MCP / STDIO / HTTP
+┌───────────────────────────────▼─────────────────────────────────┐
+│ Capa MCP                                                        │
+│ FastMCP Python · MCP SDK TypeScript · JavaScript legacy          │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │ Validación · gobernanza · auth
+┌───────────────────────────────▼─────────────────────────────────┐
+│ Integración Airtable                                            │
+│ Metadata API · Records API · Webhooks · OAuth opcional            │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                         Airtable API
 ```
 
-### Paso 2: Instalación
+### 📁 Estructura relevante
 
-Elija uno de estos métodos de instalación:
+```text
+.
+├── app.py                         # Entrada web para Railway/Nixpacks
+├── main.py                        # Entrada Python alternativa
+├── package.json                   # Scripts y dependencias Node/TypeScript
+├── requirements.txt               # Dependencias Python/FastMCP
+├── fastmcp.json                   # Configuración FastMCP
+├── src/
+│   ├── python/
+│   │   ├── inspector_server.py    # Servidor FastMCP recomendado
+│   │   ├── server.py              # Variante FastMCP base
+│   │   └── auth/                  # Variante extendida con recursos/prompts
+│   ├── typescript/                # Servidor tipado y gobernado
+│   ├── javascript/                # Servidores JavaScript compatibles
+│   └── oauth_server.js            # Servicio OAuth separado
+├── routes/                        # Rutas HTTP auxiliares
+├── services/                      # Airtable, auth y almacenamiento
+├── middleware/                    # Seguridad y formato TOON
+├── tests/                         # Smoke tests e integración
+├── examples/                      # Configuraciones y ejemplos
+├── docs/                          # Guías y documentación ampliada
+├── docker/                        # Imágenes Docker alternativas
+└── bin/                           # CLI de servidor y CRUD
+```
 
-#### 🚀 FastMCP (Recomendado - v3.2.x+)
+## 🧰 Stack tecnológico
 
-**Nueva versión con FastMCP moderno:**
+### Backend y protocolo
+
+- **Python 3.10+** — runtime principal para FastMCP.
+- **FastMCP 2.x** — registro de herramientas y transporte MCP.
+- **MCP Python SDK** — variante extendida del protocolo.
+- **Node.js 18+** — runtime para JavaScript/TypeScript y OAuth.
+- **TypeScript 5.3** — implementación con tipos y respuestas estructuradas.
+- **`@modelcontextprotocol/sdk`** — servidor MCP para Node.
+
+### Integración y datos
+
+- **Airtable Web API** — bases, esquema, registros y webhooks.
+- **`httpx`** — cliente HTTP asíncrono.
+- **`requests` / `aiohttp`** — soporte de módulos Python heredados.
+- **Redis** — almacenamiento/cache opcional para despliegues multiusuario.
+- **Back4App/Parse** — almacenamiento opcional para OAuth y credenciales asociadas.
+
+### Calidad y operación
+
+- **Zod** — validación de entradas/salidas TypeScript.
+- **Jest + ts-jest** — pruebas JavaScript/TypeScript.
+- **ESLint + Prettier** — calidad y formato.
+- **Docker / Docker Compose** — ejecución reproducible.
+- **Railway / Replit** — despliegue y ejecución web.
+
+## 🚀 Inicio rápido
+
+### 1. Requisitos
+
+- Python `3.10` o superior.
+- Node.js `18` o superior.
+- Una cuenta de Airtable.
+- Un Personal Access Token de Airtable con los permisos mínimos:
+  - `data.records:read`
+  - `data.records:write`
+  - `schema.bases:read`
+  - `webhook:manage` si usarás webhooks.
+
+### 2. Instalar dependencias
+
 ```bash
-# Instalar FastMCP CLI
-pip install fastmcp
-
-# Ejecutar el servidor
-fastmcp run
-
-# Para desarrollo con auto-reload
-npm run dev
-
-# Para producción (Railway)
-npm start
-```
-
-**Características de FastMCP:**
-- ✅ Transporte HTTP con SSE para streaming en tiempo real
-- ✅ Configuración automática de STDIO/HTTP según entorno
-- ✅ Compatible con Railway, Docker y desarrollo local
-- ✅ No requiere compilación en GitHub Actions
-
-#### 🔷 TypeScript (Desarrollo Avanzado)
-
-```bash
-# Instalar con soporte de TypeScript
-npm install -g @rashidazarang/airtable-mcp
-
-# Para desarrollo con tipos
-npm install --save-dev typescript @types/node
-```
-
-#### 📦 JavaScript (Legacy)
-
-**Opción A: Instalar a través de NPM**
-```bash
-npm install -g @rashidazarang/airtable-mcp
-```
-
-**Opción B: Clonar desde GitHub**
-```bash
-git clone https://github.com/rashidazarang/airtable-mcp.git
+git clone <URL_DEL_REPOSITORIO>
 cd airtable-mcp
-npm install
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+npm ci
 ```
 
-### Paso 3: Configurar Variables de Entorno
+En Windows:
 
-Cree un archivo `.env` en su directorio de proyecto:
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+npm ci
+```
+
+### 3. Configurar el entorno
+
+```bash
+cp .env.example .env
+```
+
+Configuración mínima para FastMCP Python:
 
 ```env
-AIRTABLE_TOKEN=su_token_de_acceso_personal_aqui
-AIRTABLE_BASE_ID=su_id_de_base_aqui  # OPCIONAL - puede ser descubierto usando la herramienta list_bases
+AIRTABLE_PERSONAL_ACCESS_TOKEN=patXXXXXXXXXXXXXX
+AIRTABLE_BASE_ID=appXXXXXXXXXXXXXX
+PORT=8000
+HOST=0.0.0.0
+LOG_LEVEL=INFO
 ```
 
-**Nuevo en v3.2.5**: ¡El `AIRTABLE_BASE_ID` ahora es **opcional**! Puede:
-- Comenzar sin un ID de base y usar la herramienta `list_bases` para descubrir sus bases accesibles
-- Especificar IDs de base dinámicamente en cada llamada de herramienta
-- Establecer una base predeterminada por conveniencia (recomendado)
+`AIRTABLE_BASE_ID` puede omitirse para comenzar con `list_bases`; las operaciones sobre tablas y registros necesitarán una base activa. También se aceptan los alias `AIRTABLE_PAT`, `AIRTABLE_TOKEN` y `AIRTABLE_API_TOKEN` en las variantes que los implementan.
 
-**Nota de Seguridad**: ¡Nunca confirme archivos `.env` al control de versiones!
+> 🔒 Nunca guardes tokens en Git. Usa secretos del entorno en Replit, Railway o tu proveedor de despliegue.
 
-### Paso 4: Configure su Cliente MCP
+### 4. Ejecutar
 
-#### 🚀 FastMCP (Recomendado - v3.2.x+)
-
-**Configuración moderna con FastMCP:**
-
-```json
-{
-  "mcpServers": {
-    "airtable-fastmcp": {
-      "command": "fastmcp",
-      "args": ["run"],
-      "env": {
-        "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE",
-        "AIRTABLE_BASE_ID": "SU_ID_DE_BASE"
-      }
-    }
-  }
-}
-```
-
-**Ventajas de FastMCP:**
-- ✅ Auto-detección de transporte (STDIO para desarrollo, HTTP para producción)
-- ✅ Soporte SSE para streaming en tiempo real
-- ✅ Configuración simplificada
-- ✅ Compatible con Railway y Docker
-
-#### 🔷 TypeScript (Experiencia Mejorada del Desarrollador)
-
-```json
-{
-  "mcpServers": {
-    "airtable-typescript": {
-      "command": "npx",
-      "args": ["@rashidazarang/airtable-mcp"],
-      "env": {
-        "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE",
-        "AIRTABLE_BASE_ID": "SU_ID_DE_BASE",
-        "NODE_ENV": "production",
-        "LOG_LEVEL": "INFO"
-      }
-    }
-  }
-}
-```
-
-#### 📦 JavaScript (Legacy)
-
-```json
-{
-  "mcpServers": {
-    "airtable": {
-      "command": "npx",
-      "args": ["@rashidazarang/airtable-mcp"],
-      "env": {
-        "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE",
-        "AIRTABLE_BASE_ID": "SU_ID_DE_BASE"
-      }
-    }
-  }
-}
-```
-
-#### Sin ID de Base (¡Nuevo!)
-
-Comience sin especificar una base y descúbralas dinámicamente:
-
-```json
-{
-  "mcpServers": {
-    "airtable": {
-      "command": "fastmcp",
-      "args": ["run"],
-      "env": {
-        "AIRTABLE_TOKEN": "SU_TOKEN_AIRTABLE"
-      }
-    }
-  }
-}
-```
-
-¡Luego use la herramienta `list_bases` para descubrir sus bases accesibles!
-
-### Paso 5: Reinicie su Cliente MCP
-
-Después de la configuración, reinicie Claude Desktop o su cliente MCP para cargar el servidor de Airtable.
-
----
-
-## 🎯 Ejemplos de Uso
-
-Una vez configurado, puede interactuar con sus datos de Airtable naturalmente:
-
-### 🔷 Desarrollo con TypeScript
-
-```typescript
-import { 
-  AirtableMCPServer, 
-  ListRecordsInput, 
-  AnalyzeDataPrompt 
-} from '@rashidazarang/airtable-mcp/types';
-
-const server = new AirtableMCPServer();
-
-// Operaciones de datos seguras de tipos
-const params: ListRecordsInput = {
-  table: 'Tasks',
-  maxRecords: 10,
-  filterByFormula: "Status = 'Active'"
-};
-
-const records = await server.handleToolCall('list_records', params);
-
-// Análisis IA seguro de tipos
-const analysis: AnalyzeDataPrompt = {
-  table: 'Sales',
-  analysis_type: 'predictive',
-  confidence_level: 0.95
-};
-
-const insights = await server.handlePromptGet('analyze_data', analysis);
-```
-
-### 📦 Interacciones en Lenguaje Natural
-
-**Operaciones Básicas**
-```
-"Listar todas mis bases Airtable accesibles"
-"Mostrarme todos los registros en la tabla Proyectos"
-"Crear una nueva tarea con prioridad 'Alta' y fecha de vencimiento mañana"
-"Actualizar el estado de la tarea ID rec123 a 'Completado'"
-"Eliminar todos los registros donde el estado sea 'Archivado'"
-"¿Qué tablas hay en mi base?"
-"Buscar registros donde Estado sea igual a 'Activo'"
-```
-
-**Operaciones de Webhook (v1.4.0+)**
-```
-"Crear un webhook para mi tabla que notifique a https://mi-app.com/webhook"
-"Listar todos los webhooks activos en mi base"
-"Mostrarme los webhooks recientes"
-"Eliminar webhook ach123xyz"
-```
-
-**Gestión de Esquemas (v1.5.0+)**
-```
-"Listar todas mis bases Airtable accesibles"
-"Mostrarme el esquema completo para esta base"
-"Describir la tabla Proyectos con todos los detalles de campo"
-"Crear una nueva tabla llamada 'Tareas' con campos Nombre, Prioridad y Fecha de Vencimiento"
-"Agregar un campo de Estado a la tabla Proyectos existente"
-"¿Qué tipos de campos están disponibles en Airtable?"
-```
-
-**Operaciones por Lotes y Adjuntos (v1.6.0+)**
-```
-"Crear 5 registros nuevos a la vez en la tabla Tareas"
-"Actualizar múltiples registros con nuevos valores de estado"
-"Eliminar estos 3 registros en una operación"
-"Adjuntar esta URL de imagen al campo de foto del registro"
-"¿Quiénes son los colaboradores en esta base?"
-"Mostrarme todas las vistas compartidas en esta base"
-```
-
----
-
-## 🛠️ Herramientas Disponibles (33 Total)
-
-### 📊 Operaciones de Datos (7 herramientas)
-| Herramienta | Descripción |
-|---|---|
-| `list_tables` | Obtener todas las tablas en su base con información de esquema |
-| `list_records` | Consultar registros con filtrado y paginación opcional |
-| `get_record` | Recuperar un registro único por ID |
-| `create_record` | Agregar nuevos registros a cualquier tabla |
-| `update_record` | Modificar campos de registros existentes |
-| `delete_record` | Eliminar registros de una tabla |
-| `search_records` | Búsqueda avanzada con fórmulas de Airtable y ordenamiento |
-
-### 🪝 Gestión de Webhooks (5 herramientas)
-| Herramienta | Descripción |
-|---|---|
-| `list_webhooks` | Ver todos los webhooks configurados para su base |
-| `create_webhook` | Configurar notificaciones en tiempo real para cambios de datos |
-| `delete_webhook` | Eliminar configuraciones de webhook |
-| `get_webhook_payloads` | Recuperar historial de notificaciones de webhook |
-| `refresh_webhook` | Extender tiempo de vencimiento de webhook |
-
-### 🔍 Descubrimiento de Esquema (6 herramientas) - **Nuevo en v1.5.0**
-| Herramienta | Descripción |
-|---|---|
-| `list_bases` | Listar todas las bases Airtable accesibles con permisos |
-| `get_base_schema` | Obtener información de esquema completa para cualquier base |
-| `describe_table` | Obtener información de tabla detallada incluyendo todas las especificaciones de campo |
-| `list_field_types` | Guía de referencia para todos los tipos de campos de Airtable disponibles |
-| `get_table_views` | Listar todas las vistas para una tabla específica con configuraciones |
-
-### 🏗️ Gestión de Tablas (3 herramientas) - **Nuevo en v1.5.0**
-| Herramienta | Descripción |
-|---|---|
-| `create_table` | Crear nuevas tablas con definiciones de campo personalizadas |
-| `update_table` | Modificar nombres y descripciones de tablas |
-| `delete_table` | Eliminar tablas (requiere confirmación de seguridad) |
-
-### 🔧 Gestión de Campos (3 herramientas) - **Nuevo en v1.5.0**
-| Herramienta | Descripción |
-|---|---|
-| `create_field` | Agregar nuevos campos a tablas existentes con todos los tipos de campo |
-| `update_field` | Modificar propiedades de campo, nombres y opciones |
-| `delete_field` | Eliminar campos (requiere confirmación de seguridad) |
-
-### ⚡ Operaciones por Lotes (4 herramientas) - **Nuevo en v1.6.0**
-| Herramienta | Descripción |
-|---|---|
-| `batch_create_records` | Crear hasta 10 registros a la vez para mejor rendimiento |
-| `batch_update_records` | Actualizar hasta 10 registros simultáneamente |
-| `batch_delete_records` | Eliminar hasta 10 registros en una sola operación |
-| `batch_upsert_records` | Actualizar registros existentes o crear nuevos basados en campos clave |
-
-### 📎 Gestión de Adjuntos (1 herramienta) - **Nuevo en v1.6.0**
-| Herramienta | Descripción |
-|---|---|
-| `upload_attachment` | Adjuntar archivos desde URLs públicas a campos de adjuntos |
-
-### 👁️ Vistas Avanzadas (2 herramientas) - **Nuevo en v1.6.0**
-| Herramienta | Descripción |
-|---|---|
-| `create_view` | Crear nuevas vistas (cuadrícula, formulario, calendario, etc.) con configuraciones personalizadas |
-| `get_view_metadata` | Obtener información de vista detallada incluyendo filtros y ordenamientos |
-
-### 🏢 Gestión de Base (3 herramientas) - **Nuevo en v1.6.0**
-| Herramienta | Descripción |
-|---|---|
-| `create_base` | Crear nuevas bases Airtable con estructuras de tabla iniciales |
-| `list_collaborators` | Ver colaboradores de base y sus niveles de permiso |
-| `list_shares` | Listar vistas compartidas y sus configuraciones públicas |
-
-### 🤖 Suite de Inteligencia IA (10 prompts) - **Nuevo en v3.0.0**
-| Prompt | Descripción | Características Empresariales |
-|---|---|---|
-| `analyze_data` | Análisis estadístico avanzado con información de ML | Intervalos de confianza, detección de anomalías |
-| `create_report` | Generación inteligente de informes con recomendaciones | Personalización multi-interesado, análisis de ROI |
-| `data_insights` | Inteligencia empresarial y descubrimiento de patrones | Correlaciones entre tablas, indicadores predictivos |
-| `optimize_workflow` | Recomendaciones de automatización impulsadas por IA | Gestión de cambios, hojas de ruta de implementación |
-| `smart_schema_design` | Optimización de base de datos con mejores prácticas | Cumplimiento de GDPR y HIPAA, planificación de escalabilidad |
-| `data_quality_audit` | Evaluación de calidad integral y correcciones | Remediación automatizada, marcos de gobernanza |
-| `predictive_analytics` | Pronóstico y predicción de tendencias | Múltiples algoritmos, cuantificación de incertidumbre |
-| `natural_language_query` | Procesamiento inteligente de preguntas humanas | Conciencia de contexto, puntuación de confianza |
-| `smart_data_transformation` | Procesamiento de datos asistido por IA | Reglas de calidad, pistas de auditoría, optimización |
-| `automation_recommendations` | Sugerencias de optimización de flujos de trabajo | Viabilidad técnica, análisis de costo-beneficio |
-
----
-
-## 🔧 Configuración Avanzada
-
-### Usando con Smithery Cloud
-
-Para servidores MCP alojados en la nube:
-
-```json
-{
-  "mcpServers": {
-    "airtable": {
-      "command": "npx",
-      "args": [
-        "@smithery/cli",
-        "run",
-        "@rashidazarang/airtable-mcp",
-        "--token",
-        "SU_TOKEN",
-        "--base",
-        "SU_ID_DE_BASE"
-      ]
-    }
-  }
-}
-```
-
-### Ejecución Directa de Node.js
-
-Si clonó el repositorio:
-
-```json
-{
-  "mcpServers": {
-    "airtable": {
-      "command": "node",
-      "args": [
-        "/ruta/a/airtable-mcp/airtable_simple.js",
-        "--token",
-        "SU_TOKEN",
-        "--base",
-        "SU_ID_DE_BASE"
-      ]
-    }
-  }
-}
-```
-
----
-
-## 🧪 Pruebas
-
-### 🔷 TypeScript
-
-Ejecute el conjunto de pruebas integral de TypeScript:
+#### Desarrollo recomendado
 
 ```bash
-# Instale las dependencias primero
-npm install
+npm run dev
+```
 
-# Ejecutar verificación de tipos de TypeScript
+Equivale a ejecutar:
+
+```bash
+python3 src/python/inspector_server.py
+```
+
+#### FastMCP mediante configuración
+
+```bash
+source .venv/bin/activate
+fastmcp run
+```
+
+La configuración se encuentra en `fastmcp.json`. Para producción, el script `npm start` configura HTTP, `0.0.0.0` y el puerto proporcionado por `PORT`.
+
+#### TypeScript
+
+```bash
+npm run build
+npm run start:http
+```
+
+#### JavaScript legacy
+
+```bash
+npm run start:js
+```
+
+## 🤖 Configurar un cliente MCP
+
+Ejemplo genérico para Claude Desktop, Cursor u otro cliente que soporte comandos MCP:
+
+```json
+{
+  "mcpServers": {
+    "airtable-brain": {
+      "command": "fastmcp",
+      "args": ["run"],
+      "env": {
+        "AIRTABLE_PERSONAL_ACCESS_TOKEN": "TU_TOKEN",
+        "AIRTABLE_BASE_ID": "appXXXXXXXXXXXXXX"
+      }
+    }
+  }
+}
+```
+
+Si el cliente usa un servidor remoto, despliega la variante HTTP y configura la URL MCP que te entregue FastMCP o tu plataforma. No expongas un endpoint de producción sin autenticación o sin una allowlist de bases/tablas.
+
+## 💬 Ejemplos de interacción
+
+Una vez conectado el servidor, puedes pedir:
+
+```text
+Lista mis bases de Airtable accesibles.
+```
+
+```text
+Muéstrame las tablas de la base appXXXXXXXXXXXXXX.
+```
+
+```text
+Consulta los registros activos de la tabla Projects usando una fórmula de Airtable.
+```
+
+```text
+Prepara una actualización de estado para estos registros y muéstrame primero el dry run.
+```
+
+```text
+Describe el esquema de la base y aplica la política de privacidad definida.
+```
+
+## ⚙️ Variables de entorno
+
+| Variable | Requerida | Uso |
+| --- | :---: | --- |
+| `AIRTABLE_PERSONAL_ACCESS_TOKEN` | ✅* | Token PAT preferido por FastMCP Python. |
+| `AIRTABLE_PAT` / `AIRTABLE_TOKEN` | ✅* | Alias aceptados por algunas implementaciones. |
+| `AIRTABLE_BASE_ID` | ❌ | Base predeterminada; puede configurarse durante la sesión. |
+| `AIRTABLE_DEFAULT_BASE` | ❌ | Base predeterminada para TypeScript. |
+| `AIRTABLE_ALLOWED_BASES` | ❌ | Lista de bases permitidas separadas por comas. |
+| `AIRTABLE_ALLOWED_TABLES` | ❌ | Allowlist TypeScript con formato `baseId:tableName`. |
+| `PORT` | ❌ | Puerto HTTP; por defecto `8000` en FastMCP. |
+| `HOST` | ❌ | Host local; por defecto `0.0.0.0` en FastMCP. |
+| `LOG_LEVEL` | ❌ | `DEBUG`, `INFO`, `WARNING` o `ERROR`. |
+| `FASTMCP_TRANSPORT` | ❌ | Transporte de despliegue, normalmente `http`. |
+| `FASTMCP_MASK_ERROR_DETAILS` | ❌ | Oculta detalles sensibles en errores TypeScript. |
+| `FASTMCP_STRICT_INPUT_VALIDATION` | ❌ | Activa validación estricta; está activa por defecto. |
+| `FASTMCP_SERVER_AUTH` | ❌ | Configuración de auth del servidor TypeScript. |
+| `REDIS_URL` | ❌ | Redis opcional para almacenamiento/cache. |
+| `DATABASE_URL` | ❌ | Base opcional para integraciones TypeScript. |
+
+Consulta [.env.example](./.env.example) para OAuth, Back4App/Parse, TOON y el resto de variables opcionales.
+
+## 🛡️ Seguridad y buenas prácticas
+
+1. **Usa secretos del entorno**, nunca tokens en argumentos, commits o ejemplos reales.
+2. **Limita bases y tablas** con `AIRTABLE_ALLOWED_BASES` y `AIRTABLE_ALLOWED_TABLES`.
+3. **Activa `dryRun`** antes de crear o actualizar datos desde la implementación TypeScript.
+4. **Usa idempotency keys** cuando un cliente pueda repetir una operación de escritura.
+5. **Separa desarrollo y producción** con tokens y bases diferentes.
+6. **No expongas HTTP directamente** sin autenticación, proxy o una red privada.
+7. **Revisa permisos Airtable** y otorga solo los scopes necesarios.
+8. **Configura políticas PII** si procesas información sensible.
+
+## 🧪 Calidad y pruebas
+
+Comandos disponibles:
+
+```bash
+# Construir TypeScript
+npm run build
+
+# Verificación de tipos
 npm run test:types
 
-# Ejecutar conjunto de pruebas completo de TypeScript
-npm run test:ts
+# Linter
+npm run lint
 
-# Construir y probar servidor de TypeScript
-npm run build
-npm run start:ts
+# Formato
+npm run format:check
+
+# Suite Jest
+npm test
 ```
 
-**El conjunto de pruebas valida:**
-- Seguridad de Tipos - Validación en tiempo de compilación de todas las interfaces
-- Pruebas Empresariales - 33 herramientas con verificación de tipos estricta
-- Validación de Prompts IA - Todos los 10 templates de IA con tipificación adecuada
-- Manejo de Errores - Gestión de errores segura de tipos
-- Rendimiento - Operaciones concurrentes con seguridad de tipos
-- Integración - Cumplimiento completo del protocolo MCP
-
-### 📦 JavaScript
-
-Ejecute el conjunto de pruebas integral para verificar todas las 33 herramientas:
+Las pruebas de integración de `tests/` esperan un servidor disponible y, en varios casos, acceso real a Airtable. Configura las variables de entorno antes de ejecutarlas y evita usar una base con datos críticos.
 
 ```bash
-# Establecer variables de entorno primero
-export AIRTABLE_TOKEN=su_token
-export AIRTABLE_BASE_ID=su_id_de_base
-
-# Iniciar el servidor
-node airtable_simple.js &
-
-# Ejecutar pruebas integrales (v1.6.0+)
-./test_v1.6.0_comprehensive.sh
+# Ejemplos de smoke/integración
+node tests/test_mcp_comprehensive.js
+bash tests/test_all_features.sh
 ```
 
-**El conjunto de pruebas valida:**
-- Todas las 33 herramientas con llamadas reales a API
-- Operaciones CRUD completas
-- Gestión avanzada de esquemas
-- Operaciones por lotes (crear/actualizar/eliminar múltiples registros)
-- Gestión de adjuntos a través de URLs
-- Creación de vistas avanzadas y metadatos
-- Herramientas de gestión de base y colaboración
-- Gestión de webhooks
-- Manejo de errores y casos límite
-- Verificación de seguridad
-- Cobertura de pruebas del 100%
+## 🐳 Docker
 
----
+### Docker Compose
 
-## 🐛 Solución de Problemas
-
-### Error "Conexión Rechazada"
-- Asegúrese de que el servidor MCP esté funcionando
-- Compruebe que el puerto 8010 no esté bloqueado
-- Reinicie su cliente MCP
-
-### Error "Token Inválido"
-- Verifique que su Token de Acceso Personal sea correcto
-- Compruebe que el token tenga los ámbitos requeridos
-- Asegúrese de que no haya espacios adicionales en sus credenciales
-
-### Error "Base No Encontrada"
-- Confirme que su ID de Base sea correcto
-- Compruebe que su token tenga acceso a la base
-
-### Conflictos de Puerto
-Si el puerto 8010 está en uso:
 ```bash
-lsof -ti:8010 | xargs kill -9
+cp .env.example .env
+# completa las variables necesarias
+docker compose up --build
 ```
 
----
+### Imagen de producción
 
-## 📚 Documentación
+```bash
+docker build -t airtable-brain-mcp:latest .
 
-### 🔷 Documentación de TypeScript
-- 📘 [Ejemplos de TypeScript](./examples/typescript/) - Ejemplos de uso completo seguro de tipos
-- 🏗️ [Definiciones de Tipo](./types/) - Definiciones de tipo integrales para todas las características
-- 🧪 [Pruebas de TypeScript](./src/test-suite.ts) - Marco de pruebas de nivel empresarial
-
-### 📦 Documentación General  
-- 🎆 [Notas de la Versión v3.1.0](./RELEASE_NOTES_v3.1.0.md) - **Último lanzamiento de TypeScript**
-- [Notas de la Versión v1.6.0](./RELEASE_NOTES_v1.6.0.md) - Lanzamiento de características principales
-- [Notas de la Versión v1.5.0](./RELEASE_NOTES_v1.5.0.md)
-- [Notas de la Versión v1.4.0](./RELEASE_NOTES_v1.4.0.md)
-- [Guía de Configuración Detallada](./CLAUDE_INTEGRATION.md)
-- [Guía de Desarrollo](./DEVELOPMENT.md)
-- [Aviso de Seguridad](./SECURITY_NOTICE.md)
-
----
-
-## 📦 Historial de Versiones
-
-| Versión | Fecha | Descripción |
-|---------|-------|-------------|
-| **v3.1.0** | 2025-08-16 | �� Soporte de TypeScript: Seguridad de tipos de nivel empresarial, distribución dual JS/TS |
-| **v3.0.0** | 2025-08-16 | 🤖 Agente IA Revolucionario: 10 prompts inteligentes, análisis predictivo |
-| **v2.2.3** | 2025-08-16 | 🔒 Lanzamiento de seguridad: Correcciones XSS y validación mejorada |
-| **v2.2.0** | 2025-08-16 | 🏆 Implementación completa del protocolo MCP 2024-11-05 |
-| **v1.6.0** | 2025-08-15 | 🎆 Operaciones por lotes y gestión de adjuntos (33 herramientas) |
-| **v1.5.0** | 2025-08-15 | Gestión integral de esquemas (23 herramientas) |
-| **v1.4.0** | 2025-08-14 | Soporte de webhook y operaciones CRUD mejoradas (12 herramientas) |
-| **v1.2.4** | 2025-08-12 | Correcciones de seguridad y mejoras de estabilidad |
-| **v1.2.3** | 2025-08-11 | Correcciones de errores y manejo de errores |
-| **v1.2.2** | 2025-08-10 | Lanzamiento estable inicial |
-
----
-
-## 📂 Estructura del Proyecto
-
-```
-airtable-mcp/
-├── src/                    # Código fuente
-│   ├── index.js           # Punto de entrada principal
-│   ├── typescript/        # Implementación de TypeScript
-│   ├── javascript/        # Implementación de JavaScript
-│   └── python/            # Implementación de Python
-├── dist/                  # Salida de TypeScript compilada
-├── docs/                  # Documentación
-│   ├── guides/           # Guías de usuario
-│   └── releases/         # Notas de lanzamiento
-├── tests/                # Archivos de prueba
-├── examples/             # Ejemplos de uso
-└── types/                # Definiciones de tipo de TypeScript
+docker run --rm \
+  --env-file .env \
+  -p 8000:8000 \
+  airtable-brain-mcp:latest
 ```
 
+Los Dockerfiles específicos se encuentran en `docker/`. Comprueba el `Dockerfile` activo y las variables del proveedor antes de publicar.
+
+## 🚂 Railway y Replit
+
+### Railway
+
+El repositorio incluye `railway.json`, `railway.toml` y `Procfile`. La configuración de Railway usa `python3 app.py` y respeta `PORT`.
+
+Variables mínimas:
+
+```text
+AIRTABLE_PERSONAL_ACCESS_TOKEN
+AIRTABLE_BASE_ID       # opcional para descubrimiento inicial
+LOG_LEVEL=INFO
+```
+
+### Replit
+
+El workflow configurado es `Iniciar` y combina:
+
+```text
+Fastmcp run
+npm run dev
+```
+
+Para una ejecución local simple, utiliza `npm run dev`. En caso de probar dos servidores HTTP simultáneamente, asigna puertos distintos para evitar colisiones.
+
+## 📚 Documentación del repositorio
+
+- [Guía de despliegue](./DEPLOYMENT.md)
+- [Estructura del proyecto](./PROJECT_STRUCTURE.md)
+- [Integración con Airtable](./docs/airtable_integration.md)
+- [Guía de instalación](./docs/guides/INSTALLATION.md)
+- [Inicio rápido](./docs/guides/QUICK_START.md)
+- [Despliegue FastMCP](./docs/guides/FASTMCP_DEPLOYMENT.md)
+- [Integración Claude](./docs/guides/CLAUDE_INTEGRATION.md)
+- [Funciones mejoradas](./docs/guides/ENHANCED_FEATURES.md)
+- [OAuth](./src/OAUTH_README.md)
+- [Contribución](./CONTRIBUTING.md)
+- [Aviso de seguridad](./SECURITY_NOTICE.md)
+- [Changelog](./CHANGELOG.md)
+
+## 🤝 Contribuir
+
+Las mejoras son bienvenidas. Antes de abrir un cambio:
+
+1. Revisa la implementación que vas a modificar.
+2. Mantén compatibles las rutas y variables existentes cuando sea posible.
+3. Añade o actualiza pruebas para nuevas herramientas.
+4. Ejecuta build, tipos, lint y formato.
+5. Documenta cambios de protocolo, seguridad o configuración.
+
+Consulta [CONTRIBUTING.md](./CONTRIBUTING.md) para conocer el flujo completo.
+
+## 📄 Licencia y atribución
+
+Este proyecto se distribuye bajo la [licencia MIT](./LICENSE). Se apoya en:
+
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+- [FastMCP](https://gofastmcp.com/)
+- [Airtable Web API](https://airtable.com/developers/web/api/introduction)
+- [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+
 ---
 
-## 🤝 Contribuyendo
-
-¡Las contribuciones son bienvenidas! Siéntase libre de enviar una Solicitud de Extracción. Para cambios principales, abra un problema primero para discutir lo que le gustaría cambiar.
-
-Para más detalles, consulte [CONTRIBUTING.md](./CONTRIBUTING.md)
-
----
-
-## 📄 Licencia
-
-Licencia MIT - vea el archivo [LICENSE](./LICENSE) para más detalles
-
----
-
-## 🙏 Agradecimientos
-
-- Construido para el [Protocolo de Contexto de Modelo](https://modelcontextprotocol.io/)
-- Impulsado por [API de Airtable](https://airtable.com/developers/web/api/introduction)
-- Compatible con [Claude Desktop](https://claude.ai/) y otros clientes MCP
-
----
-
-## �� Soporte
-
-- **Problemas**: [Problemas de GitHub](https://github.com/rashidazarang/airtable-mcp/issues)
-- **Discusiones**: [Discusiones de GitHub](https://github.com/rashidazarang/airtable-mcp/discussions)
-
----
-
-
-**Versión**: 3.2.7 | **Estado**: ⚡ FastMCP Moderno + 🔷 TypeScript Estable + 🤖 Agente IA + 🔐 OAuth Completo | **Protocolo MCP**: 2024-11-05 Completo | **Seguridad de Tipos**: Nivel Empresarial | **Inteligencia**: 10 Prompts de IA | **Seguridad**: Completamente Parcheada | **OAuth**: 34 Herramientas MCP | **Última Actualización**: 7 de Diciembre de 2025
+<p align="center">
+  <strong>Construido para explorar, automatizar y mejorar la conexión entre agentes de IA y Airtable.</strong><br>
+  <sub>Versión del paquete Node: 3.2.5 · Licencia MIT</sub>
+</p>
