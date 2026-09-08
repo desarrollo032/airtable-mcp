@@ -6,16 +6,30 @@ expertMode = true
 channel = "stable-25_05"
 
 [workflows]
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Iniciar "
 mode = "sequential"
-author = 34889668
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "Fastmcp run"
+args = "fastmcp run src/python/inspector_server.py:mcp --transport http --host 0.0.0.0 --port 8000"
+waitForPort = 8000
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
 
 [[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
+task = "workflow.run"
+args = "Iniciar "
+
+[[ports]]
+localPort = 8000
+externalPort = 80

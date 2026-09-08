@@ -18,10 +18,9 @@ Airtable MCP Inspector Server - FastMCP 2.x (Corrected)
 import os
 import sys
 import json
-import asyncio
 import logging
 from typing import Optional, Any, List, Dict
-from urllib.parse import quote_plus
+from urllib.parse import quote
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -42,6 +41,10 @@ try:
 except ImportError:
     logger.exception("httpx not installed. Install with: pip install httpx")
     raise
+
+HTTP_TIMEOUT = httpx.Timeout(60.0, connect=10.0)
+HTTP_LIMITS = httpx.Limits(max_connections=20, max_keepalive_connections=10)
+_http_client: Optional[httpx.AsyncClient] = None
 
 # FastMCP import
 try:
@@ -123,6 +126,13 @@ def _airtable_url(path: str) -> str:
     return f"https://api.airtable.com/v0/{path}"
 
 # Async API call
+def _get_http_client() -> httpx.AsyncClient:
+    global _http_client
+    if _http_client is None or _http_client.is_closed:
+        _http_client = httpx.AsyncClient(timeout=HTTP_TIMEOUT, limits=HTTP_LIMITS)
+    return _http_client
+
+
 async def api_call(endpoint: str, method: str = "GET", data: Optional[Any] = None,
                    params: Optional[dict] = None, timeout: int = 60) -> Dict[str, Any]:
     if not server_state.token:
@@ -134,26 +144,32 @@ async def api_call(endpoint: str, method: str = "GET", data: Optional[Any] = Non
     }
 
     url = _airtable_url(endpoint)
-    logger.debug("API call: %s %s %s", method.upper(), url, params or data)
+    logger.debug("API call: %s %s", method.upper(), url)
 
-    async with httpx.AsyncClient(timeout=timeout) as client:
+    try:
+        response = await _get_http_client().request(
+            method.upper(), url, headers=headers, json=data, params=params,
+            timeout=timeout,
+        )
+        response.raise_for_status()
         try:
-            response = await client.request(method.upper(), url, headers=headers, json=data, params=params)
-            response.raise_for_status()
-            try:
-                return response.json()
-            except Exception:
-                return {"raw": response.text}
-        except httpx.HTTPStatusError as e:
-            try:
-                body = e.response.json()
-            except Exception:
-                body = {"status_code": e.response.status_code, "text": e.response.text}
-            return {"error": f"API status error: {body}"}
-        except httpx.RequestError as e:
-            return {"error": f"Network error: {str(e)}"}
-        except Exception as e:
-            return {"error": f"Unexpected error: {str(e)}"}
+            return response.json()
+        except Exception:
+            return {"raw": response.text}
+    except httpx.HTTPStatusError as e:
+        try:
+            body = e.response.json()
+        except Exception:
+            body = {"status_code": e.response.status_code, "text": e.response.text}
+        return {"error": f"API status error: {body}"}
+    except httpx.RequestError as e:
+        return {"error": f"Network error: {str(e)}"}
+    except Exception as e:
+        return {"error": f"Unexpected error: {str(e)}"}
+
+
+def _chunks(items: List[Dict[str, Any]], size: int = 10) -> List[List[Dict[str, Any]]]:
+    return [items[index:index + size] for index in range(0, len(items), size)]
 
 
 # ---------------------------
@@ -175,7 +191,7 @@ async def list_tables(base_id_param: Optional[str] = None) -> str:
     base_id = (base_id_param or server_state.base_id or "").strip()
     if not base_id:
         return "No base ID provided. Use set_base_id or pass base_id_param."
-    result = await api_call(f"meta/bases/{quote_plus(base_id)}/tables")
+    result = await api_call(f"meta/bases/{quote(base_id, safe='')}/tables")
     if "error" in result:
         return f"Error: {result['error']}"
     tables = result.get("tables", [])
@@ -189,8 +205,8 @@ async def list_records(table_name: str, max_records: Optional[int] = 100, filter
         return "No base ID set. Use set_base_id to configure the base."
     if not table_name:
         return "Table name is required."
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    params: Dict[str, Any] = {"maxRecords": int(max_records or 100)}
+    endpoint = f"{quote(server_state.base_id, safe='')}/{quote(table_name, safe='')}"
+    params: Dict[str, Any] = {"maxRecords": max(1, min(int(max_records or 100), 100))}
     if filter_formula:
         params["filterByFormula"] = filter_formula
     result = await api_call(endpoint, params=params)
@@ -209,17 +225,27 @@ async def create_records(table_name: str, records_json: str) -> str:
         return "Table name is required."
     try:
         payload = json.loads(records_json) if isinstance(records_json, str) else records_json
-    except Exception:
+    except (TypeError, json.JSONDecodeError):
         return "Error: Invalid JSON for records_json."
-    if isinstance(payload, dict) and "records" not in payload:
-        payload = {"records": [{"fields": payload}]}
+    if isinstance(payload, dict) and "records" in payload:
+        records = payload["records"]
+    elif isinstance(payload, dict):
+        records = [{"fields": payload}]
     elif isinstance(payload, list):
-        payload = {"records": [{"fields": r} if "fields" not in r else r for r in payload]}
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    result = await api_call(endpoint, method="POST", data=payload)
-    if "error" in result:
-        return f"Error: {result['error']}"
-    return f"Successfully created {len(result.get('records', []))} records."
+        records = [{"fields": record} if "fields" not in record else record for record in payload]
+    else:
+        return "Error: records_json must contain an object or a list."
+    if not isinstance(records, list) or not all(isinstance(record, dict) for record in records):
+        return "Error: records_json must contain a list of record objects."
+
+    endpoint = f"{quote(server_state.base_id, safe='')}/{quote(table_name, safe='')}"
+    created = 0
+    for batch in _chunks(records):
+        result = await api_call(endpoint, method="POST", data={"records": batch})
+        if "error" in result:
+            return f"Error: {result['error']}"
+        created += len(result.get("records", []))
+    return f"Successfully created {created} records."
 
 @mcp.tool()
 async def update_records(table_name: str, records_data: str) -> str:
@@ -231,7 +257,7 @@ async def update_records(table_name: str, records_data: str) -> str:
         parsed = parse_data(records_data)
     except Exception as e:
         return f"Error parsing records data: {e}"
-    candidates = []
+    candidates: List[Dict[str, Any]] = []
     if isinstance(parsed, dict) and "records" in parsed:
         candidates = parsed["records"]
     elif isinstance(parsed, list):
@@ -240,18 +266,23 @@ async def update_records(table_name: str, records_data: str) -> str:
         candidates = [parsed]
     else:
         return "Error: update_records requires records with 'id' field."
-    to_send = []
+    if not isinstance(candidates, list) or not all(isinstance(record, dict) for record in candidates):
+        return "Error: records_data must contain a list of record objects."
+    to_send: List[Dict[str, Any]] = []
     for rec in candidates:
         if not isinstance(rec, dict) or "id" not in rec:
             return "Error: each record must have 'id' and 'fields'."
         rid = rec["id"]
         fields = rec.get("fields") or {k: v for k, v in rec.items() if k != "id"}
         to_send.append({"id": rid, "fields": fields})
-    endpoint = f"{quote_plus(server_state.base_id)}/{quote_plus(table_name)}"
-    result = await api_call(endpoint, method="PATCH", data={"records": to_send})
-    if "error" in result:
-        return f"Error: {result['error']}"
-    return f"Successfully updated {len(result.get('records', []))} records."
+    endpoint = f"{quote(server_state.base_id, safe='')}/{quote(table_name, safe='')}"
+    updated = 0
+    for batch in _chunks(to_send):
+        result = await api_call(endpoint, method="PATCH", data={"records": batch})
+        if "error" in result:
+            return f"Error: {result['error']}"
+        updated += len(result.get("records", []))
+    return f"Successfully updated {updated} records."
 
 @mcp.tool()
 async def set_base_id(base_id_param: str) -> str:
@@ -296,9 +327,7 @@ except Exception as e:
 
 
 # ---------------------------
-# Entrypoint
-# ---------------------------
-if __name__ == "__main__":
+def main() -> None:
     if not server_state.token:
         logger.error("AIRTABLE_PERSONAL_ACCESS_TOKEN not set. Exiting.")
         raise SystemExit(1)
@@ -307,3 +336,9 @@ if __name__ == "__main__":
     logger.info("PORT=%s", PORT)
     logger.info("Available tools: Basic + Comments + Schema + Webhooks + User Info + Blocks")
     mcp.run(transport="http", host="0.0.0.0", port=PORT)
+
+
+# Entrypoint
+# ---------------------------
+if __name__ == "__main__":
+    main()

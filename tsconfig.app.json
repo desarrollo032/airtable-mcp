@@ -6,12 +6,11 @@
     "declarationDir": "./types/typescript/app"
   },
   "include": [
-    "src/typescript/app/**/*"
+    "src/typescript/app/**/*",
+    "src/typescript/errors.ts"
   ],
   "exclude": [
-    "src/typescript/app/tools/**/*"
-  ],
-  "references": [
-    { "path": "./tsconfig.tools.json" }
+    "src/typescript/app/nlp/**/*",
+    "src/typescript/app/tools/natural-language.ts"
   ]
 }

@@ -14,7 +14,7 @@ export function registerExceptionsTool(server: McpServer, ctx: AppContext): void
       inputSchema: listExceptionsInputSchema.shape,
       outputSchema: listExceptionsOutputSchema.shape
     },
-    async (args: ListExceptionsInput) => {
+    (args: ListExceptionsInput) => {
       const snapshot = ctx.exceptions.list(args);
       return {
         structuredContent: snapshot,

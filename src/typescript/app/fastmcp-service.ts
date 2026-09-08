@@ -27,10 +27,10 @@ export class FastMCPService {
   }
 
   public getAuthConfig(): {
-    serverAuth?: string;
-    jwtJwksUri?: string;
-    jwtIssuer?: string;
-    jwtAudience?: string;
+    serverAuth?: string | undefined;
+    jwtJwksUri?: string | undefined;
+    jwtIssuer?: string | undefined;
+    jwtAudience?: string | undefined;
   } {
     return {
       serverAuth: this.config.serverAuth,

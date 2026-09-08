@@ -23,12 +23,11 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": true,
-    "types": []
+    "types": ["node"]
   },
   "files": [],
   "references": [
     { "path": "./tsconfig.main.json" },
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.tools.json" }
+    { "path": "./tsconfig.app.json" }
   ]
 }

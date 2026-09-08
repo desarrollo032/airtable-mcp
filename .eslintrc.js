@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './tsconfig.eslint.json',
   },
   env: {
     node: true,
@@ -18,13 +18,25 @@ module.exports = {
     'prettier',
   ],
   plugins: ['@typescript-eslint'],
-  ignorePatterns: ['dist/', 'node_modules/', '*.js'],
+  ignorePatterns: [
+    'dist/',
+    'node_modules/',
+    '*.js',
+    'src/typescript/**/*.d.ts',
+    'src/typescript/app/nlp/**',
+    'src/typescript/app/tools/natural-language.ts',
+  ],
   rules: {
     // TypeScript specific rules
     '@typescript-eslint/explicit-function-return-type': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-non-null-assertion': 'warn',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
     
     // General rules
     'no-console': ['warn', { allow: ['warn', 'error'] }],

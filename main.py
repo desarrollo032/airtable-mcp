@@ -5,10 +5,9 @@ Airtable MCP Server - Alternative Entry Point
 import os
 import sys
 
-# Add src/python to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src', 'python'))
-
-# Run the inspector server
+# Keep this entry point aligned with app.py and the deployment commands.
 if __name__ == "__main__":
-    from inspector_server import main
-    main()
+    script_path = os.path.join(
+        os.path.dirname(__file__), "src", "python", "inspector_server.py"
+    )
+    os.execv(sys.executable, [sys.executable, script_path, *sys.argv[1:]])

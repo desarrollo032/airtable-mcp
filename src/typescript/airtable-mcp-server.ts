@@ -16,7 +16,6 @@ import { AuthService } from './app/auth-service';
 import { ExternalIntegrationsService } from './app/integrations-service';
 import { registerAllTools } from './app/tools';
 import { AppContext } from './app/context';
-import { setupChatGPTIntegration } from './app/chatgpt-integration';
 
 
 const PROTOCOL_VERSION = '2025-12-08';
@@ -88,9 +87,6 @@ export async function start(): Promise<void> {
   const httpTransport = new HttpServerTransport({ host: '0.0.0.0', port, useSSE });
   await server.connect(httpTransport);
   logger.info('MCP server connected over HTTP', { port, useSSE });
-
-  // Add ChatGPT integration endpoint
-  setupChatGPTIntegration(server, context);
 
   logger.info('Airtable Brain MCP server ready', {
     version: config.version,

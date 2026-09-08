@@ -58,7 +58,7 @@ export class AuthService {
     }
   }
 
-  private async verifyJWT(token: string): Promise<any> {
+  private verifyJWT(_token: string): any {
     // Placeholder - implement actual JWT verification
     // Use jwks-rsa or similar for JWKS
     return {
@@ -67,18 +67,18 @@ export class AuthService {
     };
   }
 
-  public async authorize(userId: string, action: string, resource?: string): Promise<boolean> {
+  public authorize(userId: string, action: string, resource?: string): Promise<boolean> {
     // Placeholder authorization logic
     // In real implementation, check user roles against required permissions
     this.logger.info('Authorization check', { userId, action, resource });
-    return true; // Allow all for now
+    return Promise.resolve(true); // Allow all for now
   }
 
   public getAuthConfig(): {
-    serverAuth?: string;
-    jwtJwksUri?: string;
-    jwtIssuer?: string;
-    jwtAudience?: string;
+    serverAuth?: string | undefined;
+    jwtJwksUri?: string | undefined;
+    jwtIssuer?: string | undefined;
+    jwtAudience?: string | undefined;
   } {
     return {
       serverAuth: this.config.serverAuth,

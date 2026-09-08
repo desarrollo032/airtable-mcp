@@ -9,7 +9,7 @@ export function registerGovernanceTool(server: McpServer, ctx: AppContext): void
       description: 'Return governance allow-lists and PII masking policies.',
       outputSchema: governanceOutputSchema.shape
     },
-    async () => {
+    () => {
       const snapshot = ctx.governance.getSnapshot();
       return {
         structuredContent: snapshot,

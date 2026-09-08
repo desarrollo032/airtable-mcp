@@ -21,16 +21,16 @@ export interface FastMCPConfig {
   maskErrorDetails: boolean;
   strictInputValidation: boolean;
   includeFastMCPMeta: boolean;
-  serverAuth?: string;
-  jwtJwksUri?: string;
-  jwtIssuer?: string;
-  jwtAudience?: string;
+  serverAuth?: string | undefined;
+  jwtJwksUri?: string | undefined;
+  jwtIssuer?: string | undefined;
+  jwtAudience?: string | undefined;
 }
 
 export interface ExternalIntegrations {
-  openaiApiKey?: string;
-  redisUrl?: string;
-  databaseUrl?: string;
+  openaiApiKey?: string | undefined;
+  redisUrl?: string | undefined;
+  databaseUrl?: string | undefined;
 }
 
 export interface AppConfig {

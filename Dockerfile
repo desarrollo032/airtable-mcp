@@ -23,4 +23,4 @@ RUN mkdir -p templates
 EXPOSE 8000
 
 # Comando de inicio
-CMD ["python", "server.py"]
+CMD ["python", "src/python/inspector_server.py"]

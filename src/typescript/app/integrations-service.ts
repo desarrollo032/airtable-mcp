@@ -43,7 +43,7 @@ export class ExternalIntegrationsService {
     }
   }
 
-  private async callOpenAI(prompt: string, data: string): Promise<any> {
+  private callOpenAI(_prompt: string, _data: string): any {
     // Placeholder - implement actual OpenAI API call
     // Use fetch or OpenAI SDK
     return {
@@ -88,13 +88,14 @@ export class ExternalIntegrationsService {
     }
   }
 
-  private async setRedisKey(key: string, value: string, ttl?: number): Promise<void> {
+  private setRedisKey(_key: string, _value: string, _ttl?: number): Promise<void> {
     // Placeholder - implement actual Redis client
+    return Promise.resolve();
   }
 
-  private async getRedisKey(key: string): Promise<string | null> {
+  private getRedisKey(_key: string): Promise<string | null> {
     // Placeholder - implement actual Redis client
-    return null;
+    return Promise.resolve(null);
   }
 
   public async saveToDatabase(table: string, data: any): Promise<boolean> {
@@ -114,8 +115,9 @@ export class ExternalIntegrationsService {
     }
   }
 
-  private async insertIntoDB(table: string, data: any): Promise<void> {
+  private insertIntoDB(_table: string, _data: any): Promise<void> {
     // Placeholder - implement actual database operations
+    return Promise.resolve();
   }
 
   public hasOpenAI(): boolean {
